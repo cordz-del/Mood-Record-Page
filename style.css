@@ -15,42 +15,110 @@ body {
   min-height: 100vh;
 }
 
-/* Header Styling */
-header {
-  width: 100%;
-  text-align: center;
-  margin-top: 3rem;
-  padding: 2rem 1rem;
-  height: 8rem;
-  background: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: black;
-  position: relative;
+/* Main Header Styling (from Log-In pages) */
+.main-header {
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem 2rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }
 
-header h1 {
-  font-size: 8rem;
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.logo h1 {
+  font-size: 2.5rem;
   background: linear-gradient(45deg, #0056b3, #89cfff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin-bottom: 0.5rem;
+  margin: 0;
 }
 
-header .description {
-  font-size: 1.2rem;
+.logo .description {
+  font-size: 0.9rem;
   color: #001f3f;
+  margin-top: -5px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.nav-links a:hover {
+  background-color: #f0f0f0;
+}
+
+.nav-links a.active {
+  color: #0056b3;
+  background-color: #e6f0ff;
 }
 
 /* Main Section */
 main {
   flex: 1;
-  padding: 2rem 1rem;
+  padding: 5rem 1rem 2rem; /* extra top padding to account for fixed header */
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+/* Controls Styling */
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.controls .mood-search,
+.controls .reset-calendar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.controls button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background: #0056b3;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.controls button:hover {
+  background: #004494;
 }
 
 /* Calendar Styles */
@@ -63,7 +131,6 @@ main {
   overflow: hidden;
 }
 
-/* Calendar Header (Month & Navigation) */
 .calendar-header {
   display: flex;
   justify-content: space-between;
@@ -92,7 +159,6 @@ main {
   background: #004494;
 }
 
-/* Weekday Headers */
 .calendar-weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -107,7 +173,6 @@ main {
   padding: 0.5rem;
 }
 
-/* Calendar Body: Days Grid */
 .calendar-body {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -115,7 +180,6 @@ main {
   background: #ddd;
 }
 
-/* Calendar Day Cell */
 .calendar-day {
   background: #fafafa;
   min-height: 180px;
@@ -137,7 +201,6 @@ main {
   font-weight: bold;
 }
 
-/* Container for Mood Segments within Each Day */
 .mood-segments {
   flex: 1;
   display: flex;
@@ -145,13 +208,12 @@ main {
   gap: 2px;
 }
 
-/* Each Mood Segment (represents a time slice) */
 .segment {
   height: 10px;
   border-radius: 2px;
 }
 
-/* Color Picker Container */
+/* Color Picker */
 .color-picker {
   display: none;
   position: absolute;
@@ -166,7 +228,6 @@ main {
   display: block;
 }
 
-/* Custom color buttons */
 .color-option {
   width: 30px;
   height: 30px;
@@ -213,10 +274,6 @@ main {
 
 /* Footer Styling */
 footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
   text-align: center;
   padding: 1rem;
   background-color: #f8f8f8;
@@ -226,4 +283,19 @@ footer {
 footer p {
   font-size: 0.9rem;
   color: #666;
+}
+
+.footer-links {
+  margin-top: 0.5rem;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: #333;
+  margin: 0 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #0056b3;
 }
