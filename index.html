@@ -3,16 +3,49 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calendar - Amie-Skills</title>
+  <title>Mood Record - Amie-Skills</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>Amie</h1>
-    <div class="description">Your emotional journey at a glance</div>
+  <!-- Header (same as Log-In pages) -->
+  <header class="main-header">
+    <nav class="nav-container">
+      <div class="logo">
+        <h1>Amie</h1>
+        <p class="description">Emotional & Mental Health Assistant</p>
+      </div>
+      <div class="nav-links">
+        <a href="#" class="active">Home</a>
+        <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Contact</a>
+      </div>
+    </nav>
   </header>
 
   <main>
+    <!-- Controls: Mood Search and Reset -->
+    <div class="controls">
+      <div class="mood-search">
+        <label for="moodFilter">Search Mood:</label>
+        <select id="moodFilter">
+          <option value="">Select Mood</option>
+          <option value="stressed">Stressed</option>
+          <option value="sad">Sad</option>
+          <option value="angry">Angry</option>
+          <option value="anxiety">Anxiety</option>
+          <option value="depressed">Depressed</option>
+          <option value="lonely">Lonely</option>
+        </select>
+        <button id="searchMood">Search</button>
+        <span id="searchResult"></span>
+      </div>
+      <div class="reset-calendar">
+        <button id="resetCalendar">Reset Calendar</button>
+      </div>
+    </div>
+
+    <!-- Calendar -->
     <div class="calendar">
       <div class="calendar-header">
         <button class="prev">&laquo;</button>
@@ -31,6 +64,7 @@
       </div>
 
       <div class="calendar-body">
+        <!-- Sample day cells -->
         <div class="calendar-day">
           <div class="day-number">1</div>
           <div class="mood-segments">
@@ -57,18 +91,24 @@
     </div>
   </main>
 
+  <!-- Footer (same as Log-In pages) -->
   <footer>
-    <p>&copy; 2025 Amie-Skills. All rights reserved.</p>
+    <p>&copy; 2025 Amie. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Support</a>
+    </div>
   </footer>
 
-  <!-- Add this right before the closing </body> tag -->
+  <!-- Color Picker (for adding mood segments) -->
   <div class="color-picker" id="colorPicker">
-    <div class="color-option" style="background: #6E3A80" data-color="#6E3A80"></div>
-    <div class="color-option" style="background: #3a3ab9" data-color="#3a3ab9"></div>
-    <div class="color-option" style="background: #954646" data-color="#954646"></div>
-    <div class="color-option" style="background: #d37c46" data-color="#d37c46"></div>
-    <div class="color-option" style="background: #5F3A73" data-color="#5F3A73"></div>
-    <div class="color-option" style="background: #8a8a8a" data-color="#8a8a8a"></div>
+    <div class="color-option" style="background: #6E3A80" data-color="#6E3A80" data-mood="stressed"></div>
+    <div class="color-option" style="background: #3a3ab9" data-color="#3a3ab9" data-mood="sad"></div>
+    <div class="color-option" style="background: #954646" data-color="#954646" data-mood="angry"></div>
+    <div class="color-option" style="background: #d37c46" data-color="#d37c46" data-mood="anxiety"></div>
+    <div class="color-option" style="background: #5F3A73" data-color="#5F3A73" data-mood="depressed"></div>
+    <div class="color-option" style="background: #8a8a8a" data-color="#8a8a8a" data-mood="lonely"></div>
   </div>
 
   <script>
@@ -76,7 +116,7 @@
       const colorPicker = document.getElementById('colorPicker');
       let activeDay = null;
 
-      // Add click event to all calendar days
+      // Open color picker on day click
       document.querySelectorAll('.calendar-day').forEach(day => {
         day.addEventListener('click', function(e) {
           const rect = this.getBoundingClientRect();
@@ -84,20 +124,24 @@
           colorPicker.style.left = `${rect.left + rect.width}px`;
           colorPicker.classList.add('active');
           activeDay = this;
+          e.stopPropagation();
         });
       });
 
-      // Handle color selection
+      // Handle color selection (adds a new mood segment)
       document.querySelectorAll('.color-option').forEach(option => {
-        option.addEventListener('click', function() {
+        option.addEventListener('click', function(e) {
           if (activeDay) {
             const color = this.dataset.color;
+            const moodClass = this.dataset.mood;
             const newSegment = document.createElement('div');
-            newSegment.className = 'segment';
+            newSegment.className = 'segment ' + moodClass;
             newSegment.style.background = color;
             activeDay.querySelector('.mood-segments').appendChild(newSegment);
             colorPicker.classList.remove('active');
+            activeDay = null;
           }
+          e.stopPropagation();
         });
       });
 
@@ -105,6 +149,29 @@
       document.addEventListener('click', function(e) {
         if (!e.target.closest('.calendar-day') && !e.target.closest('.color-picker')) {
           colorPicker.classList.remove('active');
+        }
+      });
+
+      // Reset calendar (clears all mood segments)
+      document.getElementById('resetCalendar').addEventListener('click', function() {
+        document.querySelectorAll('.mood-segments').forEach(segmentContainer => {
+          segmentContainer.innerHTML = '';
+        });
+      });
+
+      // Search mood functionality: count segments matching the selected mood
+      document.getElementById('searchMood').addEventListener('click', function() {
+        const selectedMood = document.getElementById('moodFilter').value;
+        let count = 0;
+        if (selectedMood) {
+          document.querySelectorAll('.segment').forEach(segment => {
+            if (segment.classList.contains(selectedMood)) {
+              count++;
+            }
+          });
+          document.getElementById('searchResult').textContent = ` ${selectedMood.charAt(0).toUpperCase() + selectedMood.slice(1)}: ${count} time(s)`;
+        } else {
+          document.getElementById('searchResult').textContent = ' Please select a mood.';
         }
       });
     });
