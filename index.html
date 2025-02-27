@@ -60,5 +60,54 @@
   <footer>
     <p>&copy; 2025 Amie-Skills. All rights reserved.</p>
   </footer>
+
+  <!-- Add this right before the closing </body> tag -->
+  <div class="color-picker" id="colorPicker">
+    <div class="color-option" style="background: #6E3A80" data-color="#6E3A80"></div>
+    <div class="color-option" style="background: #3a3ab9" data-color="#3a3ab9"></div>
+    <div class="color-option" style="background: #954646" data-color="#954646"></div>
+    <div class="color-option" style="background: #d37c46" data-color="#d37c46"></div>
+    <div class="color-option" style="background: #5F3A73" data-color="#5F3A73"></div>
+    <div class="color-option" style="background: #8a8a8a" data-color="#8a8a8a"></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const colorPicker = document.getElementById('colorPicker');
+      let activeDay = null;
+
+      // Add click event to all calendar days
+      document.querySelectorAll('.calendar-day').forEach(day => {
+        day.addEventListener('click', function(e) {
+          const rect = this.getBoundingClientRect();
+          colorPicker.style.top = `${rect.top + window.scrollY}px`;
+          colorPicker.style.left = `${rect.left + rect.width}px`;
+          colorPicker.classList.add('active');
+          activeDay = this;
+        });
+      });
+
+      // Handle color selection
+      document.querySelectorAll('.color-option').forEach(option => {
+        option.addEventListener('click', function() {
+          if (activeDay) {
+            const color = this.dataset.color;
+            const newSegment = document.createElement('div');
+            newSegment.className = 'segment';
+            newSegment.style.background = color;
+            activeDay.querySelector('.mood-segments').appendChild(newSegment);
+            colorPicker.classList.remove('active');
+          }
+        });
+      });
+
+      // Close color picker when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!e.target.closest('.calendar-day') && !e.target.closest('.color-picker')) {
+          colorPicker.classList.remove('active');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
