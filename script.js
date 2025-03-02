@@ -5,15 +5,16 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentYear = today.getFullYear();
   let currentMonth = today.getMonth(); // 0-indexed
 
+  // Generates the calendar for a given month/year
   function generateCalendar(year, month) {
     calendarBody.innerHTML = "";
     const monthNames = [
       "January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December"
     ];
-    currentMonthLabel.textContent = monthNames[month] + " " + year;
+    currentMonthLabel.textContent = `${monthNames[month]} ${year}`;
 
-    // Get first day and number of days in month
+    // Determine the starting day and total days in month
     let firstDay = new Date(year, month, 1).getDay();
     let daysInMonth = new Date(year, month + 1, 0).getDate();
 
@@ -24,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
       calendarBody.appendChild(blankDiv);
     }
 
-    // Create day bubbles
+    // Create day bubbles with click events to open the mood entry panel
     for (let d = 1; d <= daysInMonth; d++) {
       let dayDiv = document.createElement("div");
       dayDiv.classList.add("day-bubble");
@@ -32,8 +33,9 @@ document.addEventListener("DOMContentLoaded", function () {
       dayDiv.dataset.date = new Date(year, month, d).toISOString();
       dayDiv.addEventListener("click", function (e) {
         e.stopPropagation();
+        // If a panel already exists, close it; otherwise, create a new one
         if (dayDiv.querySelector(".mood-entry-panel")) {
-          dayDiv.querySelector(".mood-entry-panel").remove();
+          closePanel(dayDiv.querySelector(".mood-entry-panel"));
         } else {
           closeAllPanels();
           createMoodEntryPanel(dayDiv, year, month, d);
@@ -43,26 +45,44 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  function closeAllPanels() {
-    document.querySelectorAll(".mood-entry-panel").forEach(panel => panel.remove());
+  // Smoothly close a single panel with fade-out animation
+  function closePanel(panel) {
+    if (panel) {
+      panel.classList.remove("active");
+      setTimeout(() => panel.remove(), 300); // Remove after animation duration
+    }
   }
 
+  // Close all open mood panels
+  function closeAllPanels() {
+    document.querySelectorAll(".mood-entry-panel").forEach(panel => {
+      panel.classList.remove("active");
+      setTimeout(() => panel.remove(), 300);
+    });
+  }
+
+  // Clicking anywhere outside closes any open panel
   document.addEventListener("click", function () {
     closeAllPanels();
   });
 
+  // Creates and appends the mood entry panel to the clicked day bubble
   function createMoodEntryPanel(dayDiv, year, month, day) {
     let panel = document.createElement("div");
     panel.classList.add("mood-entry-panel");
+    // Start hidden for smooth fade-in
+    panel.style.opacity = "0";
     panel.addEventListener("click", function (e) {
       e.stopPropagation();
     });
 
+    // Header displaying the selected date
     let header = document.createElement("div");
     header.classList.add("panel-header");
     header.textContent = `Date: ${month + 1}/${day}/${year}`;
     panel.appendChild(header);
 
+    // Time selection label and options
     let timeLabel = document.createElement("div");
     timeLabel.textContent = "Select Time:";
     panel.appendChild(timeLabel);
@@ -74,8 +94,10 @@ document.addEventListener("DOMContentLoaded", function () {
       btn.textContent = time;
       btn.classList.add("time-btn");
       btn.addEventListener("click", function () {
+        // Mark only the clicked time as selected
         timeContainer.querySelectorAll(".time-btn").forEach(b => b.classList.remove("selected"));
         btn.classList.add("selected");
+        // Create mood color options if not already created
         if (!panel.querySelector(".mood-colors")) {
           createMoodColorOptions(panel);
         }
@@ -85,8 +107,14 @@ document.addEventListener("DOMContentLoaded", function () {
     panel.appendChild(timeContainer);
 
     dayDiv.appendChild(panel);
+    // Trigger smooth fade-in by adding the "active" class after appending
+    setTimeout(() => {
+      panel.classList.add("active");
+      panel.style.opacity = "1";
+    }, 10);
   }
 
+  // Creates the mood color options (six moods) for the panel
   function createMoodColorOptions(panel) {
     let colorsContainer = document.createElement("div");
     colorsContainer.classList.add("mood-colors");
@@ -108,8 +136,10 @@ document.addEventListener("DOMContentLoaded", function () {
       colorDiv.title = mood.name;
       colorDiv.addEventListener("click", function (e) {
         e.stopPropagation();
+        // Highlight the selected mood color
         colorsContainer.querySelectorAll(".color-option").forEach(c => c.classList.remove("selected"));
         colorDiv.classList.add("selected");
+        // Once a mood is selected, add the reason input if not already present
         if (!panel.querySelector(".reason-input")) {
           createReasonInput(panel);
         }
@@ -119,6 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
     panel.appendChild(colorsContainer);
   }
 
+  // Creates the reason input area and Save button for the mood entry
   function createReasonInput(panel) {
     let reasonDiv = document.createElement("div");
     reasonDiv.classList.add("reason-input");
@@ -150,6 +181,10 @@ document.addEventListener("DOMContentLoaded", function () {
       const selectedColor = panel.querySelector(".color-option.selected").style.backgroundColor;
       dayBubble.style.backgroundColor = selectedColor;
       
+      // Optionally, add a brief "saved" animation on the day bubble
+      dayBubble.classList.add("saved");
+      setTimeout(() => dayBubble.classList.remove("saved"), 300);
+
       closeAllPanels();
     });
     reasonDiv.appendChild(saveBtn);
@@ -157,12 +192,14 @@ document.addEventListener("DOMContentLoaded", function () {
     panel.appendChild(reasonDiv);
   }
 
+  // Save the mood entry in localStorage
   function saveMoodEntry(moodEntry) {
     let moodEntries = JSON.parse(localStorage.getItem("moodEntries") || "[]");
     moodEntries.push(moodEntry);
     localStorage.setItem("moodEntries", JSON.stringify(moodEntries));
   }
 
+  // Load saved mood entries and update day bubbles accordingly
   function loadMoodEntries() {
     const moodEntries = JSON.parse(localStorage.getItem("moodEntries") || "[]");
     const moods = {
@@ -205,7 +242,7 @@ document.addEventListener("DOMContentLoaded", function () {
     loadMoodEntries();
   });
 
-  // Reset calendar button
+  // Reset calendar button: returns to the current month and clears saved entries from view
   document.getElementById("resetCalendar").addEventListener("click", function (e) {
     e.stopPropagation();
     currentYear = today.getFullYear();
@@ -214,7 +251,7 @@ document.addEventListener("DOMContentLoaded", function () {
     loadMoodEntries();
   });
 
-  // Initial calendar render
+  // Initial render
   generateCalendar(currentYear, currentMonth);
   loadMoodEntries();
 });
