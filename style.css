@@ -14,7 +14,7 @@ body {
   min-height: 100vh;
 }
 
-/* Fixed Header Styling - Matching Log-In-Amie */
+/* Fixed Header Styling - Matching Log-In-Amie/Amie-Skills */
 .main-header {
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -30,14 +30,15 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  /* Since navigation links are removed, we only need to align the logo */
 }
 
 .logo h1 {
   font-size: 2.5rem;
   background: linear-gradient(45deg, #0056b3, #89cfff);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   margin: 0;
 }
@@ -48,30 +49,7 @@ body {
   margin-top: -5px;
 }
 
-.nav-links {
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-}
-
-.nav-links a {
-  text-decoration: none;
-  color: #333;
-  font-size: 1.1rem;
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-}
-
-.nav-links a:hover {
-  background-color: #f0f0f0;
-}
-
-.nav-links a.active {
-  color: #0056b3;
-  background-color: #e6f0ff;
-}
+/* (Navigation links removed as per requirement) */
 
 /* Main Content */
 main {
@@ -315,7 +293,8 @@ main {
   box-shadow: 0 4px 8px rgba(33, 147, 176, 0.3);
 }
 
-/* Fixed Footer Styling - Matching Log-In-Amie */
+/* Fixed Footer Styling - Matching Log-In-Amie/Amie-Skills */
+/* Footer now only displays copyright text */
 footer {
   background-color: #f8f8f8;
   padding: 4rem 2rem 1rem;
@@ -326,24 +305,6 @@ footer {
   color: #666;
 }
 
-.footer-links {
-  margin-top: 1rem;
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-}
-
-.footer-links a {
-  color: #666;
-  text-decoration: none;
-  font-size: 0.95rem;
-  transition: color 0.3s;
-}
-
-.footer-links a:hover {
-  color: #2193b0;
-}
-
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .main-header {
@@ -352,9 +313,7 @@ footer {
   .logo h1 {
     font-size: 2rem;
   }
-  .nav-links {
-    gap: 1rem;
-  }
+  /* Since nav-links are removed, no adjustments needed for them */
   main {
     padding: 1rem;
   }
