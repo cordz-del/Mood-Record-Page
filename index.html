@@ -4,100 +4,119 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mood Record - Amie-Skills</title>
-  <!-- Link your updated stylesheet here -->
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
-
-  <!-- Optional: If you have any additional inline styles for mood animations, modals, etc. -->
-  <style>
-    /* Example of any inline styles you may need */
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
-  <!-- Header (matching Log-In-Amie/Amie-Skills) -->
+  <!-- Header (unchanged) -->
   <header class="main-header">
     <nav class="nav-container">
       <div class="logo">
         <h1>Amie</h1>
         <p class="description">Emotional &amp; Mental Health Assistant</p>
       </div>
-      <!-- Navigation links removed, matching other pages -->
     </nav>
   </header>
 
-  <!-- Main Content -->
-  <main>
-    <!-- Mood Search & Calendar Controls -->
-    <div class="controls">
-      <div class="mood-search">
-        <label for="moodFilter">Search Mood:</label>
-        <select id="moodFilter">
-          <option value="">All Moods</option>
-          <option value="stressed">Stressed</option>
-          <option value="sad">Sad</option>
-          <option value="angry">Angry</option>
-          <option value="anxiety">Anxiety</option>
-          <option value="depressed">Depressed</option>
-          <option value="lonely">Lonely</option>
-        </select>
-        <button id="searchMood">Search</button>
-        <span id="searchResult"></span>
-      </div>
-      <div class="reset-calendar">
-        <button id="resetCalendar">Reset Calendar</button>
-      </div>
-    </div>
-
-    <!-- Calendar -->
-    <div class="calendar">
-      <div class="calendar-header">
-        <button id="prevMonth">&laquo;</button>
-        <h2 id="currentMonth"></h2>
-        <button id="nextMonth">&raquo;</button>
-      </div>
-      <div class="calendar-weekdays">
-        <div>Sun</div>
-        <div>Mon</div>
-        <div>Tue</div>
-        <div>Wed</div>
-        <div>Thu</div>
-        <div>Fri</div>
-        <div>Sat</div>
-      </div>
-      <div id="calendarBody" class="calendar-body"></div>
-    </div>
-
-    <!-- Mood Selection Panel -->
-    <div id="moodPanel" class="mood-panel">
-      <!-- Time Slots -->
-      <div class="time-slots">
-        <div class="time-slot" data-time="morning">Morning</div>
-        <div class="time-slot" data-time="afternoon">Afternoon</div>
-        <div class="time-slot" data-time="evening">Evening</div>
-        <div class="time-slot" data-time="night">Night</div>
+  <main class="container">
+    <section class="mood-tracker">
+      <div class="controls">
+        <div class="date-controls">
+          <button id="prevMonth" class="nav-btn">&lt;</button>
+          <h2 id="currentMonth">September 2023</h2>
+          <button id="nextMonth" class="nav-btn">&gt;</button>
+        </div>
+        
+        <div class="mood-filters">
+          <div class="search-box">
+            <input type="text" id="moodSearch" placeholder="Search moods...">
+            <button id="searchBtn">Search</button>
+          </div>
+          <button id="resetBtn" class="reset-btn">Reset View</button>
+        </div>
       </div>
 
-      <!-- Mood Colors -->
-      <div class="mood-colors">
-        <div class="mood-color" style="background: #9F58B0;" data-mood="stressed" title="Stressed"></div>
-        <div class="mood-color" style="background: #8C9EFF;" data-mood="sad" title="Sad"></div>
-        <div class="mood-color" style="background: #FF5A5F;" data-mood="angry" title="Angry"></div>
-        <div class="mood-color" style="background: #FFA500;" data-mood="anxiety" title="Anxiety"></div>
-        <div class="mood-color" style="background: #4C4CFF;" data-mood="depressed" title="Depressed"></div>
-        <div class="mood-color" style="background: #999999;" data-mood="lonely" title="Lonely"></div>
+      <div class="calendar-container">
+        <div class="weekdays">
+          <span>Sun</span>
+          <span>Mon</span>
+          <span>Tue</span>
+          <span>Wed</span>
+          <span>Thu</span>
+          <span>Fri</span>
+          <span>Sat</span>
+        </div>
+        <div id="calendar" class="calendar-grid"></div>
       </div>
 
-      <!-- Mood Note -->
-      <textarea class="mood-note" placeholder="Add a note about your mood..."></textarea>
+      <div id="moodSelector" class="mood-selector hidden">
+        <h3>How are you feeling?</h3>
+        <div class="time-selector">
+          <button data-time="morning" class="time-btn">Morning</button>
+          <button data-time="afternoon" class="time-btn">Afternoon</button>
+          <button data-time="evening" class="time-btn">Evening</button>
+          <button data-time="night" class="time-btn">Night</button>
+        </div>
 
-      <!-- Save/Cancel Buttons -->
-      <button id="saveMood">Save</button>
-      <button id="cancelMood">Cancel</button>
+        <div class="mood-grid">
+          <button class="mood-btn" data-mood="happy">
+            <span class="mood-icon">😊</span>
+            <span class="mood-label">Happy</span>
+          </button>
+          <button class="mood-btn" data-mood="sad">
+            <span class="mood-icon">😢</span>
+            <span class="mood-label">Sad</span>
+          </button>
+          <button class="mood-btn" data-mood="angry">
+            <span class="mood-icon">😠</span>
+            <span class="mood-label">Angry</span>
+          </button>
+          <button class="mood-btn" data-mood="anxious">
+            <span class="mood-icon">😰</span>
+            <span class="mood-label">Anxious</span>
+          </button>
+          <button class="mood-btn" data-mood="tired">
+            <span class="mood-icon">😴</span>
+            <span class="mood-label">Tired</span>
+          </button>
+          <button class="mood-btn" data-mood="calm">
+            <span class="mood-icon">😌</span>
+            <span class="mood-label">Calm</span>
+          </button>
+        </div>
+
+        <div class="mood-notes">
+          <textarea id="moodNotes" placeholder="Add notes about your mood (optional)"></textarea>
+        </div>
+
+        <div class="action-buttons">
+          <button id="saveMoodBtn" class="primary-btn">Save</button>
+          <button id="cancelMoodBtn" class="secondary-btn">Cancel</button>
+        </div>
+      </div>
+    </section>
+
+    <div id="moodStats" class="mood-statistics">
+      <h3>Mood Statistics</h3>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h4>Most Common Mood</h4>
+          <p id="commonMood">-</p>
+        </div>
+        <div class="stat-card">
+          <h4>Mood Streak</h4>
+          <p id="moodStreak">0 days</p>
+        </div>
+        <div class="stat-card">
+          <h4>Monthly Overview</h4>
+          <div id="moodChart" class="mood-chart"></div>
+        </div>
+      </div>
     </div>
   </main>
 
-  <!-- Footer (matching Log-In-Amie/Amie-Skills) -->
+  <!-- Footer (unchanged) -->
   <footer class="main-footer">
     <div class="footer-content">
       <div class="footer-section">
@@ -121,25 +140,12 @@
           <li><a href="support.html">Support</a></li>
         </ul>
       </div>
-      <!-- "Connect With Us" section removed -->
     </div>
     <div class="footer-bottom">
       <p>&copy; 2025 Amie. All rights reserved.</p>
     </div>
   </footer>
 
-  <!-- JavaScript for Calendar & Mood Panel (can be in a separate file) -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Example initialization code:
-      let currentDate = new Date();
-      let selectedDate = null;
-      let moodPanel = document.getElementById('moodPanel');
-      let moodData = {};
-
-      // ... Your existing calendar logic, mood selection logic, etc. ...
-      // (Omitted for brevity)
-    });
-  </script>
+  <script src="mood-tracker.js"></script>
 </body>
 </html>
