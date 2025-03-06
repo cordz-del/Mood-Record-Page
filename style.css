@@ -69,7 +69,7 @@ main {
   padding: 2rem;
 }
 
-/* Mood Recording Section – Updated with glassmorphism */
+/* Mood Recording Section – Updated with Glassmorphism */
 .mood-recording {
   width: 100%;
   max-width: 800px;
@@ -169,12 +169,13 @@ main {
   gap: 1.5rem;
 }
 
-/* Mood Entry Card with glassmorphism effect */
+/* Mood Entry Card with Glassmorphism Effect */
 .mood-entry {
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(8px);
   padding: 1.5rem;
   border-radius: 10px;
+  margin-bottom: 1rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
@@ -200,7 +201,7 @@ main {
   font-weight: bold;
 }
 
-/* Mood level color classes */
+/* Mood Level Color Classes */
 .mood-level-1 { background-color: #ff4d4d; }
 .mood-level-2 { background-color: #ff8c1a; }
 .mood-level-3 { background-color: #ffff4d; color: #333; }
