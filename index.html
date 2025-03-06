@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <!-- Header (unchanged) -->
@@ -14,106 +15,34 @@
     <nav class="nav-container">
       <div class="logo">
         <h1>Amie</h1>
-        <p class="description">Emotional &amp; Mental Health Assistant</p>
+        <p class="description">Emotional & Mental Health Assistant</p>
       </div>
     </nav>
   </header>
 
   <main class="container">
-    <section class="mood-tracker">
-      <div class="controls">
-        <div class="date-controls">
-          <button id="prevMonth" class="nav-btn">&lt;</button>
-          <h2 id="currentMonth">September 2023</h2>
-          <button id="nextMonth" class="nav-btn">&gt;</button>
-        </div>
-        
-        <div class="mood-filters">
-          <div class="search-box">
-            <input type="text" id="moodSearch" placeholder="Search moods...">
-            <button id="searchBtn">Search</button>
-          </div>
-          <button id="resetBtn" class="reset-btn">Reset View</button>
-        </div>
-      </div>
-
-      <div class="calendar-container">
-        <div class="weekdays">
-          <span>Sun</span>
-          <span>Mon</span>
-          <span>Tue</span>
-          <span>Wed</span>
-          <span>Thu</span>
-          <span>Fri</span>
-          <span>Sat</span>
-        </div>
-        <div id="calendar" class="calendar-grid"></div>
-      </div>
-
-      <div id="moodSelector" class="mood-selector hidden">
-        <h3>How are you feeling?</h3>
-        <div class="time-selector">
-          <button data-time="morning" class="time-btn">Morning</button>
-          <button data-time="afternoon" class="time-btn">Afternoon</button>
-          <button data-time="evening" class="time-btn">Evening</button>
-          <button data-time="night" class="time-btn">Night</button>
-        </div>
-
-        <div class="mood-grid">
-          <button class="mood-btn" data-mood="happy">
-            <span class="mood-icon">😊</span>
-            <span class="mood-label">Happy</span>
-          </button>
-          <button class="mood-btn" data-mood="sad">
-            <span class="mood-icon">😢</span>
-            <span class="mood-label">Sad</span>
-          </button>
-          <button class="mood-btn" data-mood="angry">
-            <span class="mood-icon">😠</span>
-            <span class="mood-label">Angry</span>
-          </button>
-          <button class="mood-btn" data-mood="anxious">
-            <span class="mood-icon">😰</span>
-            <span class="mood-label">Anxious</span>
-          </button>
-          <button class="mood-btn" data-mood="tired">
-            <span class="mood-icon">😴</span>
-            <span class="mood-label">Tired</span>
-          </button>
-          <button class="mood-btn" data-mood="calm">
-            <span class="mood-icon">😌</span>
-            <span class="mood-label">Calm</span>
-          </button>
-        </div>
-
-        <div class="mood-notes">
-          <textarea id="moodNotes" placeholder="Add notes about your mood (optional)"></textarea>
-        </div>
-
-        <div class="action-buttons">
-          <button id="saveMoodBtn" class="primary-btn">Save</button>
-          <button id="cancelMoodBtn" class="secondary-btn">Cancel</button>
-        </div>
+    <section class="emotion-section">
+      <h2>How are you feeling right now?</h2>
+      <div class="emotion-grid">
+        <button class="emotion-box" data-mood="happy" style="background-color:#9F58B0">😊 Happy</button>
+        <button class="emotion-box" data-mood="anxious" style="background-color:#FFA500">😟 Anxious</button>
+        <button class="emotion-box" data-mood="sad" style="background-color:#003d82">😢 Sad</button>
+        <button class="emotion-box" data-mood="angry" style="background-color:#FF5A5F">😠 Angry</button>
+        <button class="emotion-box" data-mood="lonely" style="background-color:#999999">😔 Lonely</button>
+        <button class="emotion-box" data-mood="depressed" style="background:linear-gradient(45deg,#002147,#3B4252)">😞 Depressed</button>
       </div>
     </section>
 
-    <div id="moodStats" class="mood-statistics">
-      <h3>Mood Statistics</h3>
-      <div class="stats-grid">
-        <div class="stat-card">
-          <h4>Most Common Mood</h4>
-          <p id="commonMood">-</p>
-        </div>
-        <div class="stat-card">
-          <h4>Mood Streak</h4>
-          <p id="moodStreak">0 days</p>
-        </div>
-        <div class="stat-card">
-          <h4>Monthly Overview</h4>
-          <div id="moodChart" class="mood-chart"></div>
-        </div>
+    <section class="graph-section">
+      <canvas id="moodChart"></canvas>
+    </section>
+
+    <section class="mood-log-section">
+      <h2>Your Mood History</h2>
+      <div id="mood-log" class="mood-cards-container">
+        <!-- Mood logs dynamically inserted here -->
       </div>
-    </div>
+    </section>
   </main>
 
   <!-- Footer (unchanged) -->
@@ -146,6 +75,6 @@
     </div>
   </footer>
 
-  <script src="mood-tracker.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
