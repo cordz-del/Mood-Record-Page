@@ -53,25 +53,42 @@
       </div>
     </section>
 
-    <!-- Emotional Skills & Resources Section -->
-    <section class="skills-section">
-      <h2>Emotional Skills &amp; Resources</h2>
-      <div class="skills-grid">
-        <div class="skill-box">
-          <h3>Meditation</h3>
-          <p>Explore mindfulness techniques for stress relief</p>
+    <!-- Inspirational Quote Section -->
+    <section class="quote-section">
+      <div class="inspirational-quote glass-box">
+        <h3>Daily Inspiration</h3>
+        <p id="dailyQuote">"Keep up the good work – positivity is contagious!"</p>
+      </div>
+    </section>
+
+    <!-- Interactive Calendar Section -->
+    <section class="calendar-section">
+      <h2>Log Your Mood on the Calendar</h2>
+      <div class="calendar-container glass-box">
+        <div class="calendar-header">
+          <button id="prevMonth" class="nav-btn">&lt;</button>
+          <h3 id="currentMonth">September 2023</h3>
+          <button id="nextMonth" class="nav-btn">&gt;</button>
         </div>
-        <div class="skill-box">
-          <h3>Breathing Exercises</h3>
-          <p>Simple techniques for calmness and relaxation</p>
+        <div class="calendar-grid" id="calendarGrid">
+          <!-- Calendar day cells will be generated dynamically by script.js -->
         </div>
-        <div class="skill-box">
-          <h3>Journaling</h3>
-          <p>Express your thoughts and feelings in writing</p>
-        </div>
-        <div class="skill-box">
-          <h3>Mood Tracking</h3>
-          <p>Track your mood patterns over time</p>
+      </div>
+      <!-- Mood Log Modal (hidden by default) -->
+      <div id="moodEntryModal" class="modal hidden">
+        <div class="modal-content glass-box">
+          <h3>Log Your Mood for <span id="modalDate"></span></h3>
+          <div class="modal-mood-selection">
+            <button class="mood-btn" data-mood="stressed" style="background-color:#9F58B0">😖</button>
+            <button class="mood-btn" data-mood="sad" style="background-color:#003d82">😢</button>
+            <button class="mood-btn" data-mood="angry" style="background-color:#FF5A5F">😠</button>
+            <button class="mood-btn" data-mood="anxiety" style="background-color:#FFA500">😟</button>
+            <button class="mood-btn" data-mood="depressed" style="background:linear-gradient(45deg, #002147, #3B4252)">😞</button>
+            <button class="mood-btn" data-mood="lonely" style="background-color:#999999">😔</button>
+          </div>
+          <textarea id="moodReason" placeholder="Write a short reason why you feel this way..."></textarea>
+          <button id="saveCalendarMood" class="submit-btn">Save Mood</button>
+          <button id="cancelCalendarMood" class="submit-btn secondary-btn">Cancel</button>
         </div>
       </div>
     </section>
