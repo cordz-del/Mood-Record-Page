@@ -1,176 +1,193 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const calendarBody = document.getElementById("calendarBody");
-  const currentMonthLabel = document.getElementById("currentMonth");
-  let today = new Date();
-  let currentYear = today.getFullYear();
-  let currentMonth = today.getMonth();
+document.addEventListener('DOMContentLoaded', () => {
+  // DOM Elements for mood logging
+  const timeBtns = document.querySelectorAll('.time-btn');
+  const moodBtns = document.querySelectorAll('.mood-btn');
+  const notesField = document.getElementById('moodNotes');
+  const saveMoodBtn = document.getElementById('saveMoodBtn');
+  const moodLogContainer = document.getElementById('moodLog');
+  const moodChartCanvas = document.getElementById('moodChart').getContext('2d');
 
-  // Generate the calendar for a given month and year
-  function generateCalendar(year, month) {
-    calendarBody.innerHTML = "";
-    const monthNames = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
-    ];
-    currentMonthLabel.textContent = `${monthNames[month]} ${year}`;
+  // Local Storage key to persist mood logs
+  const STORAGE_KEY = 'amieMoodLogs';
 
-    // Determine the first day and number of days in the month
-    let firstDay = new Date(year, month, 1).getDay();
-    let daysInMonth = new Date(year, month + 1, 0).getDate();
+  // Variables to track current selections
+  let selectedTime = null;
+  let selectedMood = null;
 
-    // Create blank cells for days before the first day of the month
-    for (let i = 0; i < firstDay; i++) {
-      let blankDiv = document.createElement("div");
-      blankDiv.classList.add("day-bubble", "empty");
-      calendarBody.appendChild(blankDiv);
+  // Define mood colors used for chart point coloring
+  const moodColors = {
+    stressed: '#9F58B0',
+    sad: '#003d82',
+    angry: '#FF5A5F',
+    anxiety: '#FFA500',
+    depressed: '#4C4CFF',
+    lonely: '#999999'
+  };
+
+  // Event listeners for Time-of-Day buttons
+  timeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      timeBtns.forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedTime = btn.dataset.time;
+    });
+  });
+
+  // Event listeners for Mood buttons
+  moodBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      moodBtns.forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedMood = btn.dataset.mood;
+    });
+  });
+
+  // Save mood entry when user clicks the save button
+  saveMoodBtn.addEventListener('click', () => {
+    const notes = notesField.value.trim();
+
+    // Validate that a time and a mood have been selected
+    if (!selectedTime || !selectedMood) {
+      alert('Please select both a time of day and a mood.');
+      return;
     }
 
-    // Create day bubbles with click events to open the mood entry panel
-    for (let d = 1; d <= daysInMonth; d++) {
-      let dayDiv = document.createElement("div");
-      dayDiv.classList.add("day-bubble");
-      dayDiv.textContent = d;
-      dayDiv.dataset.date = new Date(year, month, d).toISOString().split('T')[0];
-      dayDiv.addEventListener("click", function (e) {
-        e.stopPropagation();
-        if (dayDiv.querySelector(".mood-entry-panel")) {
-          closePanel(dayDiv.querySelector(".mood-entry-panel"));
-        } else {
-          closeAllPanels();
-          createMoodEntryPanel(dayDiv, year, month, d);
-        }
+    // Build the mood entry object
+    const newEntry = {
+      timestamp: new Date().toISOString(),
+      timeOfDay: selectedTime,
+      mood: selectedMood,
+      notes: notes
+    };
+
+    // Retrieve existing mood logs, append the new entry, and save back to localStorage
+    let moodLogs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    moodLogs.push(newEntry);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(moodLogs));
+
+    // Reset selections and clear the notes field
+    timeBtns.forEach(b => b.classList.remove('selected'));
+    moodBtns.forEach(b => b.classList.remove('selected'));
+    notesField.value = '';
+    selectedTime = null;
+    selectedMood = null;
+
+    // Re-render the mood history list and update the chart
+    renderMoodHistory();
+    renderChart();
+  });
+
+  // Function to render the mood history as cards
+  function renderMoodHistory() {
+    moodLogContainer.innerHTML = '';
+    let moodLogs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+    // Sort entries so that newest appear first
+    moodLogs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    moodLogs.forEach(log => {
+      const card = document.createElement('div');
+      card.className = 'mood-card';
+
+      const dateObj = new Date(log.timestamp);
+      const dateString = dateObj.toLocaleString([], {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
       });
-      calendarBody.appendChild(dayDiv);
-    }
-  }
 
-  // Smoothly close a single mood entry panel
-  function closePanel(panel) {
-    if (panel) {
-      panel.classList.remove("active");
-      setTimeout(() => panel.remove(), 300);
-    }
-  }
+      card.innerHTML = `
+        <div class="card-time">${dateString}</div>
+        <div class="card-mood">${log.timeOfDay.toUpperCase()} - ${log.mood}</div>
+        <div class="card-notes">${log.notes || ''}</div>
+      `;
 
-  // Close all open mood entry panels
-  function closeAllPanels() {
-    document.querySelectorAll(".mood-entry-panel").forEach(panel => {
-      closePanel(panel);
+      moodLogContainer.appendChild(card);
     });
   }
 
-  // Create and append the mood entry panel to the clicked day bubble
-  function createMoodEntryPanel(dayDiv, year, month, day) {
-    let panel = document.createElement("div");
-    panel.classList.add("mood-entry-panel");
-    panel.innerHTML = `
-      <div class="panel-header">Date: ${month + 1}/${day}/${year}</div>
-      <div>Select Time:</div>
-      <div class="time-options">
-        ${["Morning", "Afternoon", "Evening", "Night"].map(time => `<button class="time-btn">${time}</button>`).join('')}
-      </div>
-      <div class="mood-colors">
-        ${[
-          { name: "stressed", color: "#9F58B0" },
-          { name: "sad", color: "#003d82" },
-          { name: "angry", color: "#FF5A5F" },
-          { name: "anxiety", color: "#FFA500" },
-          { name: "depressed", color: "#4C4CFF" },
-          { name: "lonely", color: "#999999" }
-        ].map(mood => `<div class="color-option" data-mood="${mood.name}" style="background-color:${mood.color}"></div>`).join('')}
-      </div>
-      <div class="reason-input">
-        <textarea placeholder="Why do you feel this way?"></textarea>
-        <button class="save-btn">Save</button>
-      </div>`;
+  // Chart.js instance (to be updated on each save)
+  let moodChart;
+  function renderChart() {
+    let moodLogs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 
-    // Add event listeners for time selection buttons
-    panel.querySelectorAll('.time-btn').forEach(btn => {
-      btn.onclick = () => {
-        panel.querySelectorAll('.time-btn').forEach(b => b.classList.remove("selected"));
-        btn.classList.add("selected");
-      };
-    });
-
-    // Add event listeners for mood color options
-    panel.querySelectorAll('.color-option').forEach(option => {
-      option.onclick = () => {
-        panel.querySelectorAll('.color-option').forEach(o => o.classList.remove("selected"));
-        option.classList.add("selected");
-      };
-    });
-
-    // Add event listener for the Save button
-    panel.querySelector('.save-btn').onclick = () => {
-      const selectedTime = panel.querySelector(".time-btn.selected")?.textContent;
-      const selectedMood = panel.querySelector(".color-option.selected")?.dataset.mood;
-      const reason = panel.querySelector("textarea").value.trim();
-      const date = dayDiv.dataset.date;
-
-      if (!selectedTime || !selectedMood || !reason) {
-        alert("Please fill in all fields before saving.");
-        return;
-      }
-
-      saveMoodEntry({ date, time: selectedTime, mood: selectedMood, reason });
-      // Update the day bubble's background color to the selected mood color
-      dayDiv.style.backgroundColor = panel.querySelector(".color-option.selected").style.backgroundColor;
-      closeAllPanels();
+    // Map each mood to a numeric value for the chart:
+    // stressed:5, sad:4, angry:3, anxiety:2, depressed:1, lonely:0
+    const moodValueMap = {
+      stressed: 5,
+      sad: 4,
+      angry: 3,
+      anxiety: 2,
+      depressed: 1,
+      lonely: 0
     };
 
-    dayDiv.appendChild(panel);
-    // Activate the panel after a slight delay for a smooth transition
-    setTimeout(() => panel.classList.add("active"), 10);
-  }
+    // Sort logs in chronological order
+    moodLogs.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
-  // Save mood entry data in localStorage
-  function saveMoodEntry(entry) {
-    let moodEntries = JSON.parse(localStorage.getItem("moodEntries") || "[]");
-    // Remove any existing entry for the same date and time
-    moodEntries = moodEntries.filter(e => !(e.date === entry.date && e.time === entry.time));
-    moodEntries.push(entry);
-    localStorage.setItem("moodEntries", JSON.stringify(moodEntries));
-  }
+    const labels = moodLogs.map(log => {
+      const d = new Date(log.timestamp);
+      return d.toLocaleDateString([], { month: 'short', day: 'numeric' }) + 
+             ` (${log.timeOfDay.substring(0, 3)})`;
+    });
+    const dataValues = moodLogs.map(log => moodValueMap[log.mood]);
 
-  // Load saved mood entries and update day bubbles accordingly
-  function loadMoodEntries() {
-    const moodEntries = JSON.parse(localStorage.getItem("moodEntries") || "[]");
-    const moods = {
-      stressed: "#9F58B0",
-      sad: "#003d82",
-      angry: "#FF5A5F",
-      anxiety: "#FFA500",
-      depressed: "#4C4CFF",
-      lonely: "#999999"
-    };
-    document.querySelectorAll(".day-bubble").forEach(bubble => {
-      if (!bubble.classList.contains("empty")) {
-        const entry = moodEntries.filter(e => e.date === bubble.dataset.date).pop();
-        if (entry) bubble.style.backgroundColor = moods[entry.mood];
+    // Destroy the existing chart instance if it exists
+    if (moodChart) {
+      moodChart.destroy();
+    }
+
+    moodChart = new Chart(moodChartCanvas, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Mood Intensity',
+          data: dataValues,
+          fill: false,
+          borderColor: '#0056b3',
+          backgroundColor: '#0056b3',
+          tension: 0.3,
+          pointBackgroundColor: dataValues.map((val, i) => {
+            const mood = moodLogs[i].mood;
+            return moodColors[mood] || '#0056b3';
+          }),
+          pointRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 5,
+            ticks: {
+              stepSize: 1,
+              callback: (value) => {
+                switch(value) {
+                  case 5: return 'Stressed';
+                  case 4: return 'Sad';
+                  case 3: return 'Angry';
+                  case 2: return 'Anxiety';
+                  case 1: return 'Depressed';
+                  case 0: return 'Lonely';
+                  default: return '';
+                }
+              }
+            }
+          }
+        },
+        plugins: {
+          legend: { display: false }
+        }
       }
     });
   }
 
-  // Month navigation: previous month
-  document.getElementById("prevMonth").onclick = () => {
-    currentMonth = (currentMonth - 1 + 12) % 12;
-    currentYear -= currentMonth === 11 ? 1 : 0;
-    generateCalendar(currentYear, currentMonth);
-    loadMoodEntries();
-  };
-
-  // Month navigation: next month
-  document.getElementById("nextMonth").onclick = () => {
-    currentMonth = (currentMonth + 1) % 12;
-    currentYear += currentMonth === 0 ? 1 : 0;
-    generateCalendar(currentYear, currentMonth);
-    loadMoodEntries();
-  };
-
-  // Close any open panels when clicking outside
-  document.addEventListener("click", closeAllPanels);
-
-  // Initial render of calendar and mood entries
-  generateCalendar(currentYear, currentMonth);
-  loadMoodEntries();
+  // Initial rendering of the mood history and chart on page load
+  renderMoodHistory();
+  renderChart();
 });
