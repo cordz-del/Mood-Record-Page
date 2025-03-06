@@ -15,7 +15,7 @@
     <nav class="nav-container">
       <div class="logo">
         <h1>Amie</h1>
-        <p class="description">Emotional & Mental Health Assistant</p>
+        <p class="description">Emotional &amp; Mental Health Assistant</p>
       </div>
     </nav>
   </header>
@@ -23,20 +23,62 @@
   <main class="container">
     <!-- Mood Selection Section -->
     <section class="emotion-section">
-      <h2>How are you feeling right now?</h2>
+      <h2>Please choose based on the options below how you are feeling right now?</h2>
       <div class="emotion-grid">
-        <!-- Note: Using desired mood choices and corresponding colors -->
-        <button class="emotion-box" data-mood="stressed" style="background-color:#9F58B0">😖 Stressed</button>
-        <button class="emotion-box" data-mood="anxiety" style="background-color:#FFA500">😟 Anxiety</button>
-        <button class="emotion-box" data-mood="sad" style="background-color:#003d82">😢 Sad</button>
-        <button class="emotion-box" data-mood="angry" style="background-color:#FF5A5F">😠 Angry</button>
-        <button class="emotion-box" data-mood="lonely" style="background-color:#999999">😔 Lonely</button>
-        <button class="emotion-box" data-mood="depressed" style="background:linear-gradient(45deg, #002147, #3B4252)">😞 Depressed</button>
+        <!-- Large, colorful mood boxes with emojis -->
+        <button class="emotion-box" data-mood="stressed" style="background-color:#9F58B0">
+          <h3>😖 Stressed</h3>
+          <p>A state of mental or emotional strain or tension</p>
+        </button>
+        <button class="emotion-box" data-mood="sad" style="background-color:#003d82">
+          <h3>😢 Sad</h3>
+          <p>A feeling of sorrow or unhappiness</p>
+        </button>
+        <button class="emotion-box" data-mood="angry" style="background-color:#FF5A5F">
+          <h3>😠 Angry</h3>
+          <p>A strong feeling of displeasure or hostility</p>
+        </button>
+        <button class="emotion-box" data-mood="anxiety" style="background-color:#FFA500">
+          <h3>😟 Anxiety</h3>
+          <p>A feeling of worry, nervousness, or unease</p>
+        </button>
+        <button class="emotion-box" data-mood="depressed" style="background:linear-gradient(45deg, #002147, #3B4252)">
+          <h3>😞 Depressed</h3>
+          <p>A mood marked by deep sadness and low energy</p>
+        </button>
+        <button class="emotion-box" data-mood="lonely" style="background-color:#999999">
+          <h3>😔 Lonely</h3>
+          <p>A feeling of social isolation or solitude</p>
+        </button>
+      </div>
+    </section>
+
+    <!-- Emotional Skills & Resources Section -->
+    <section class="skills-section">
+      <h2>Emotional Skills &amp; Resources</h2>
+      <div class="skills-grid">
+        <div class="skill-box">
+          <h3>Meditation</h3>
+          <p>Explore mindfulness techniques for stress relief</p>
+        </div>
+        <div class="skill-box">
+          <h3>Breathing Exercises</h3>
+          <p>Simple techniques for calmness and relaxation</p>
+        </div>
+        <div class="skill-box">
+          <h3>Journaling</h3>
+          <p>Express your thoughts and feelings in writing</p>
+        </div>
+        <div class="skill-box">
+          <h3>Mood Tracking</h3>
+          <p>Track your mood patterns over time</p>
+        </div>
       </div>
     </section>
 
     <!-- Chart Section -->
     <section class="graph-section">
+      <h2>Mood Trends</h2>
       <canvas id="moodChart"></canvas>
     </section>
 
