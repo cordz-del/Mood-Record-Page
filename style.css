@@ -14,7 +14,7 @@ body {
   min-height: 100vh;
 }
 
-/* Header Styling */
+/* Header Styling – DO NOT CHANGE */
 .main-header {
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -69,17 +69,20 @@ main {
   padding: 2rem;
 }
 
-/* Mood Recording Section */
+/* Mood Recording Section – Updated with glassmorphism */
 .mood-recording {
   width: 100%;
   max-width: 800px;
   margin: 2rem auto;
   padding: 2rem;
-  background-color: #fff;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
   border-radius: 15px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
+/* Mood Form */
 .mood-form {
   display: flex;
   flex-direction: column;
@@ -104,8 +107,18 @@ main {
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 1rem;
+  background: rgba(255, 255, 255, 0.8);
+  transition: border-color 0.3s ease;
 }
 
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: #0056b3;
+  outline: none;
+}
+
+/* Mood Slider */
 .mood-slider {
   -webkit-appearance: none;
   width: 100%;
@@ -123,8 +136,14 @@ main {
   border-radius: 50%;
   background: #0056b3;
   cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
+.mood-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* Submit Button */
 .submit-btn {
   background-color: #0056b3;
   color: white;
@@ -133,27 +152,34 @@ main {
   border-radius: 8px;
   font-size: 1.1rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .submit-btn:hover {
   background-color: #003d82;
+  transform: translateY(-3px);
 }
 
 /* Mood History Section */
 .mood-history {
   width: 100%;
   margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
+/* Mood Entry Card with glassmorphism effect */
 .mood-entry {
-  background-color: white;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
   padding: 1.5rem;
   border-radius: 10px;
-  margin-bottom: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
+/* Mood Entry Header */
 .mood-entry-header {
   display: flex;
   justify-content: space-between;
@@ -166,6 +192,7 @@ main {
   color: #666;
 }
 
+/* Mood Level Indicator */
 .mood-level {
   padding: 0.5rem 1rem;
   border-radius: 20px;
@@ -173,13 +200,14 @@ main {
   font-weight: bold;
 }
 
+/* Mood level color classes */
 .mood-level-1 { background-color: #ff4d4d; }
 .mood-level-2 { background-color: #ff8c1a; }
 .mood-level-3 { background-color: #ffff4d; color: #333; }
 .mood-level-4 { background-color: #80ff80; }
 .mood-level-5 { background-color: #4dff4d; }
 
-/* Footer */
+/* Footer – DO NOT CHANGE */
 .main-footer {
   background-color: #f8f8f8;
   padding: 4rem 2rem 1rem;
@@ -234,19 +262,19 @@ main {
   .main-header {
     padding: 1rem;
   }
-
+  
   .logo h1 {
     font-size: 2rem;
   }
-
+  
   main {
     padding: 1rem;
   }
-
+  
   .mood-recording {
     padding: 1.5rem;
   }
-
+  
   .submit-btn {
     width: 100%;
   }
@@ -256,12 +284,12 @@ main {
   .logo h1 {
     font-size: 1.75rem;
   }
-
+  
   .footer-content {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
-
+  
   .mood-entry-header {
     flex-direction: column;
     gap: 0.5rem;
