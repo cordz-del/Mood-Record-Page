@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const labels = moodLogs.map(log => {
       const d = new Date(log.timestamp);
-      return d.toLocaleDateString([], { month: 'short', day: 'numeric' }) + 
+      return d.toLocaleDateString([], { month: 'short', day: 'numeric' }) +
              ` (${log.timeOfDay.substring(0, 3)})`;
     });
     const dataValues = moodLogs.map(log => moodValueMap[log.mood]);
