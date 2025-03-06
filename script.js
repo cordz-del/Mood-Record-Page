@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
       let dayDiv = document.createElement("div");
       dayDiv.classList.add("day-bubble");
       dayDiv.textContent = d;
-      dayDiv.dataset.date = new Date(year, month, d).toISOString();
+      dayDiv.dataset.date = new Date(year, month, d).toISOString().split('T')[0];
       dayDiv.addEventListener("click", function (e) {
         e.stopPropagation();
         // If a panel already exists, close it; otherwise, create a new one
@@ -56,33 +56,24 @@ document.addEventListener("DOMContentLoaded", function () {
   // Close all open mood panels
   function closeAllPanels() {
     document.querySelectorAll(".mood-entry-panel").forEach(panel => {
-      panel.classList.remove("active");
-      setTimeout(() => panel.remove(), 300);
+      closePanel(panel);
     });
   }
-
-  // Clicking anywhere outside closes any open panel
-  document.addEventListener("click", function () {
-    closeAllPanels();
-  });
 
   // Creates and appends the mood entry panel to the clicked day bubble
   function createMoodEntryPanel(dayDiv, year, month, day) {
     let panel = document.createElement("div");
     panel.classList.add("mood-entry-panel");
-    // Start hidden for smooth fade-in
     panel.style.opacity = "0";
     panel.addEventListener("click", function (e) {
       e.stopPropagation();
     });
 
-    // Header displaying the selected date
     let header = document.createElement("div");
     header.classList.add("panel-header");
     header.textContent = `Date: ${month + 1}/${day}/${year}`;
     panel.appendChild(header);
 
-    // Time selection label and options
     let timeLabel = document.createElement("div");
     timeLabel.textContent = "Select Time:";
     panel.appendChild(timeLabel);
@@ -94,10 +85,8 @@ document.addEventListener("DOMContentLoaded", function () {
       btn.textContent = time;
       btn.classList.add("time-btn");
       btn.addEventListener("click", function () {
-        // Mark only the clicked time as selected
         timeContainer.querySelectorAll(".time-btn").forEach(b => b.classList.remove("selected"));
         btn.classList.add("selected");
-        // Create mood color options if not already created
         if (!panel.querySelector(".mood-colors")) {
           createMoodColorOptions(panel);
         }
@@ -107,14 +96,13 @@ document.addEventListener("DOMContentLoaded", function () {
     panel.appendChild(timeContainer);
 
     dayDiv.appendChild(panel);
-    // Trigger smooth fade-in by adding the "active" class after appending
     setTimeout(() => {
       panel.classList.add("active");
       panel.style.opacity = "1";
     }, 10);
   }
 
-  // Creates the mood color options (six moods) for the panel
+  // Creates the mood color options
   function createMoodColorOptions(panel) {
     let colorsContainer = document.createElement("div");
     colorsContainer.classList.add("mood-colors");
@@ -136,10 +124,8 @@ document.addEventListener("DOMContentLoaded", function () {
       colorDiv.title = mood.name;
       colorDiv.addEventListener("click", function (e) {
         e.stopPropagation();
-        // Highlight the selected mood color
         colorsContainer.querySelectorAll(".color-option").forEach(c => c.classList.remove("selected"));
         colorDiv.classList.add("selected");
-        // Once a mood is selected, add the reason input if not already present
         if (!panel.querySelector(".reason-input")) {
           createReasonInput(panel);
         }
@@ -149,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
     panel.appendChild(colorsContainer);
   }
 
-  // Creates the reason input area and Save button for the mood entry
+  // Creates the reason input area and Save button
   function createReasonInput(panel) {
     let reasonDiv = document.createElement("div");
     reasonDiv.classList.add("reason-input");
@@ -165,8 +151,13 @@ document.addEventListener("DOMContentLoaded", function () {
       e.stopPropagation();
       const selectedTime = panel.querySelector(".time-btn.selected")?.textContent;
       const selectedMood = panel.querySelector(".color-option.selected")?.dataset.mood;
-      const reason = textarea.value;
+      const reason = textarea.value.trim();
       const date = panel.closest(".day-bubble").dataset.date;
+
+      if (!selectedTime || !selectedMood || !reason) {
+        alert("Please fill in all fields before saving.");
+        return;
+      }
 
       const moodEntry = {
         date: date,
@@ -181,7 +172,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const selectedColor = panel.querySelector(".color-option.selected").style.backgroundColor;
       dayBubble.style.backgroundColor = selectedColor;
       
-      // Optionally, add a brief "saved" animation on the day bubble
       dayBubble.classList.add("saved");
       setTimeout(() => dayBubble.classList.remove("saved"), 300);
 
@@ -195,11 +185,15 @@ document.addEventListener("DOMContentLoaded", function () {
   // Save the mood entry in localStorage
   function saveMoodEntry(moodEntry) {
     let moodEntries = JSON.parse(localStorage.getItem("moodEntries") || "[]");
+    // Remove any existing entry for the same date and time
+    moodEntries = moodEntries.filter(entry => 
+      !(entry.date === moodEntry.date && entry.time === moodEntry.time)
+    );
     moodEntries.push(moodEntry);
     localStorage.setItem("moodEntries", JSON.stringify(moodEntries));
   }
 
-  // Load saved mood entries and update day bubbles accordingly
+  // Load saved mood entries and update day bubbles
   function loadMoodEntries() {
     const moodEntries = JSON.parse(localStorage.getItem("moodEntries") || "[]");
     const moods = {
@@ -211,10 +205,15 @@ document.addEventListener("DOMContentLoaded", function () {
       "lonely": "#999999"
     };
 
-    moodEntries.forEach(entry => {
-      const dayBubble = document.querySelector(`.day-bubble[data-date="${entry.date}"]`);
-      if (dayBubble) {
-        dayBubble.style.backgroundColor = moods[entry.mood];
+    document.querySelectorAll(".day-bubble").forEach(bubble => {
+      if (!bubble.classList.contains("empty")) {
+        const latestEntry = moodEntries
+          .filter(entry => entry.date === bubble.dataset.date)
+          .pop();
+        
+        if (latestEntry) {
+          bubble.style.backgroundColor = moods[latestEntry.mood];
+        }
       }
     });
   }
@@ -242,14 +241,19 @@ document.addEventListener("DOMContentLoaded", function () {
     loadMoodEntries();
   });
 
-  // Reset calendar button: returns to the current month and clears saved entries from view
+  // Reset calendar button
   document.getElementById("resetCalendar").addEventListener("click", function (e) {
     e.stopPropagation();
-    currentYear = today.getFullYear();
-    currentMonth = today.getMonth();
-    generateCalendar(currentYear, currentMonth);
-    loadMoodEntries();
+    if (confirm("Are you sure you want to reset the calendar? This will clear all mood entries.")) {
+      localStorage.removeItem("moodEntries");
+      currentYear = today.getFullYear();
+      currentMonth = today.getMonth();
+      generateCalendar(currentYear, currentMonth);
+    }
   });
+
+  // Close panels when clicking outside
+  document.addEventListener("click", closeAllPanels);
 
   // Initial render
   generateCalendar(currentYear, currentMonth);
