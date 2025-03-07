@@ -10,7 +10,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <!-- Header (unchanged) -->
+  <!-- Header -->
   <header class="main-header">
     <nav class="nav-container">
       <div class="logo">
@@ -23,92 +23,111 @@
   <main class="container">
     <!-- Mood Selection Section -->
     <section class="emotion-section">
-      <h2>Please choose based on the options below how you are feeling right now?</h2>
+      <h2>How are you feeling right now?</h2>
       <div class="emotion-grid">
-        <!-- Large, colorful mood boxes with emojis -->
-        <button class="emotion-box" data-mood="stressed" style="background-color:#9F58B0">
+        <button class="emotion-box" data-mood="happy" style="background-color: #FFD700">
+          <h3>😊 Happy</h3>
+          <p>Feeling joyful and content</p>
+        </button>
+        <button class="emotion-box" data-mood="calm" style="background-color: #98FB98">
+          <h3>😌 Calm</h3>
+          <p>Feeling peaceful and relaxed</p>
+        </button>
+        <button class="emotion-box" data-mood="stressed" style="background-color: #9F58B0">
           <h3>😖 Stressed</h3>
-          <p>A state of mental or emotional strain or tension</p>
+          <p>Feeling overwhelmed or tense</p>
         </button>
-        <button class="emotion-box" data-mood="sad" style="background-color:#003d82">
+        <button class="emotion-box" data-mood="sad" style="background-color: #003d82">
           <h3>😢 Sad</h3>
-          <p>A feeling of sorrow or unhappiness</p>
+          <p>Feeling down or unhappy</p>
         </button>
-        <button class="emotion-box" data-mood="angry" style="background-color:#FF4500">
+        <button class="emotion-box" data-mood="angry" style="background-color: #FF4500">
           <h3>😠 Angry</h3>
-          <p>A strong feeling of displeasure or hostility</p>
+          <p>Feeling frustrated or upset</p>
         </button>
-        <button class="emotion-box" data-mood="anxiety" style="background-color:#FFA500">
-          <h3>😟 Anxiety</h3>
-          <p>A feeling of worry, nervousness, or unease</p>
-        </button>
-        <button class="emotion-box" data-mood="depressed" style="background:linear-gradient(45deg, #002147, #3B4252)">
-          <h3>😞 Depressed</h3>
-          <p>A mood marked by deep sadness and low energy</p>
-        </button>
-        <button class="emotion-box" data-mood="lonely" style="background-color:#999999">
-          <h3>😔 Lonely</h3>
-          <p>A feeling of social isolation or solitude</p>
+        <button class="emotion-box" data-mood="anxious" style="background-color: #FFA500">
+          <h3>😟 Anxious</h3>
+          <p>Feeling worried or nervous</p>
         </button>
       </div>
+    </section>
+
+    <!-- Mood Input Section -->
+    <section class="mood-input-section glass-box hidden" id="moodInputSection">
+      <h3>Tell us more about how you're feeling</h3>
+      <textarea id="moodDescription" placeholder="What's making you feel this way? (optional)"></textarea>
+      <div class="intensity-slider">
+        <label for="moodIntensity">How intense is this feeling? (1-10)</label>
+        <input type="range" id="moodIntensity" min="1" max="10" value="5">
+        <span id="intensityValue">5</span>
+      </div>
+      <button id="saveMood" class="submit-btn">Save</button>
     </section>
 
     <!-- Inspirational Quote Section -->
     <section class="quote-section">
       <div class="inspirational-quote glass-box">
         <h3>Daily Inspiration</h3>
-        <p id="dailyQuote">"Keep up the good work – positivity is contagious!"</p>
+        <p id="dailyQuote">"Every day is a new beginning. Take a deep breath and start again."</p>
       </div>
     </section>
 
-    <!-- Interactive Calendar Section -->
+    <!-- Calendar Section -->
     <section class="calendar-section">
-      <h2>Log Your Mood on the Calendar</h2>
+      <h2>Your Mood Calendar</h2>
       <div class="calendar-container glass-box">
         <div class="calendar-header">
           <button id="prevMonth" class="nav-btn">&lt;</button>
-          <h3 id="currentMonth">September 2023</h3>
+          <h3 id="currentMonth"></h3>
           <button id="nextMonth" class="nav-btn">&gt;</button>
         </div>
-        <div class="calendar-grid" id="calendarGrid">
-          <!-- Calendar day cells will be generated dynamically by script.js -->
+        <div class="weekdays">
+          <div>Sun</div>
+          <div>Mon</div>
+          <div>Tue</div>
+          <div>Wed</div>
+          <div>Thu</div>
+          <div>Fri</div>
+          <div>Sat</div>
         </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
       </div>
-      <!-- Mood Log Modal (hidden by default) -->
-      <div id="moodEntryModal" class="modal hidden">
-        <div class="modal-content glass-box">
-          <h3>Log Your Mood for <span id="modalDate"></span></h3>
-          <div class="modal-mood-selection">
-            <button class="mood-btn" data-mood="stressed" style="background-color:#9F58B0">😖</button>
-            <button class="mood-btn" data-mood="sad" style="background-color:#003d82">😢</button>
-            <button class="mood-btn" data-mood="angry" style="background-color:#FF4500">😠</button>
-            <button class="mood-btn" data-mood="anxiety" style="background-color:#FFA500">😟</button>
-            <button class="mood-btn" data-mood="depressed" style="background:linear-gradient(45deg, #002147, #3B4252)">😞</button>
-            <button class="mood-btn" data-mood="lonely" style="background-color:#999999">😔</button>
+    </section>
+
+    <!-- Mood Statistics Section -->
+    <section class="stats-section">
+      <h2>Your Mood Patterns</h2>
+      <div class="stats-container glass-box">
+        <div class="chart-container">
+          <canvas id="moodChart"></canvas>
+        </div>
+        <div class="stats-summary">
+          <div class="stat-item">
+            <h4>Most Common Mood</h4>
+            <p id="commonMood">-</p>
           </div>
-          <textarea id="moodReason" placeholder="Write a short reason why you feel this way..."></textarea>
-          <button id="saveCalendarMood" class="submit-btn">Save Mood</button>
-          <button id="cancelCalendarMood" class="submit-btn secondary-btn">Cancel</button>
+          <div class="stat-item">
+            <h4>Average Mood Intensity</h4>
+            <p id="avgIntensity">-</p>
+          </div>
+          <div class="stat-item">
+            <h4>Mood Entries</h4>
+            <p id="totalEntries">-</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Chart Section -->
-    <section class="graph-section">
-      <h2>Mood Trends</h2>
-      <canvas id="moodChart"></canvas>
-    </section>
-
-    <!-- Mood Log Section -->
+    <!-- Recent Mood Logs Section -->
     <section class="mood-log-section">
-      <h2>Your Mood History</h2>
-      <div id="mood-log" class="mood-cards-container">
-        <!-- Mood logs will be dynamically inserted here by script.js -->
+      <h2>Recent Mood Logs</h2>
+      <div id="moodLogContainer" class="mood-log-container">
+        <!-- Mood logs will be dynamically inserted here -->
       </div>
     </section>
   </main>
 
-  <!-- Footer (unchanged) -->
+  <!-- Footer -->
   <footer class="main-footer">
     <div class="footer-content">
       <div class="footer-section">
