@@ -23,13 +23,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Other Elements ---
   const moodLogContainer = document.getElementById('mood-log');
 
-  // Define mood colors (from Amie-Skills)
+  // Define mood colors (updated from Amie-Skills)
   const moodColors = {
     stressed: '#9F58B0',
     sad: '#003d82',
-    angry: '#FF5A5F',
+    angry: '#FF4500',       // Updated to Warm Orange-Red
     anxiety: '#FFA500',
-    depressed: '#4C4CFF',
+    depressed: '#002147',   // Representative color; calendar cells for depressed use gradient
     lonely: '#999999'
   };
 
@@ -143,9 +143,14 @@ document.addEventListener('DOMContentLoaded', () => {
       if (logsForDay.length > 0) {
         // Use the mood color of the latest entry
         const latestEntry = logsForDay[logsForDay.length - 1];
-        cell.style.backgroundColor = moodColors[latestEntry.mood] || '';
+        if (latestEntry.mood === 'depressed') {
+          cell.style.background = 'linear-gradient(45deg, #002147, #3B4252)';
+        } else {
+          cell.style.backgroundColor = moodColors[latestEntry.mood] || '';
+        }
       } else {
         cell.style.backgroundColor = '';
+        cell.style.background = '';
       }
     });
   }
@@ -181,7 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // -------------------------
   // Chart.js Rendering
   // -------------------------
-  let moodChart;
   function renderChart() {
     let moodLogs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     // Map moods to numeric values (example: stressed:5, sad:4, angry:3, anxiety:2, depressed:1, lonely:0)
@@ -253,25 +257,4 @@ document.addEventListener('DOMContentLoaded', () => {
   prevMonthBtn.addEventListener('click', () => {
     currentMonth--;
     if (currentMonth < 0) {
-      currentMonth = 11;
-      currentYear--;
-    }
-    generateCalendar(currentYear, currentMonth);
-  });
-
-  nextMonthBtn.addEventListener('click', () => {
-    currentMonth++;
-    if (currentMonth > 11) {
-      currentMonth = 0;
-      currentYear++;
-    }
-    generateCalendar(currentYear, currentMonth);
-  });
-
-  // -------------------------
-  // Initial Rendering
-  // -------------------------
-  generateCalendar(currentYear, currentMonth);
-  renderMoodHistory();
-  renderChart();
-});
+      
