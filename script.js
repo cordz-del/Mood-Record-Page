@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // -------------------------
   function renderChart() {
     let moodLogs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    // Map moods to numeric values (example: stressed:5, sad:4, angry:3, anxiety:2, depressed:1, lonely:0)
+    // Map moods to numeric values
     const moodValueMap = {
       stressed: 5,
       sad: 4,
@@ -257,4 +257,23 @@ document.addEventListener('DOMContentLoaded', () => {
   prevMonthBtn.addEventListener('click', () => {
     currentMonth--;
     if (currentMonth < 0) {
-      
+      currentMonth = 11;
+      currentYear--;
+    }
+    generateCalendar(currentYear, currentMonth);
+  });
+
+  nextMonthBtn.addEventListener('click', () => {
+    currentMonth++;
+    if (currentMonth > 11) {
+      currentMonth = 0;
+      currentYear++;
+    }
+    generateCalendar(currentYear, currentMonth);
+  });
+
+  // Initial render
+  generateCalendar(currentYear, currentMonth);
+  renderMoodHistory();
+  renderChart();
+});
