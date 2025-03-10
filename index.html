@@ -2,15 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mood Record - Amie-Skills</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+    rel="stylesheet"
+  />
+  <!-- If you need Chart.js for future expansions -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <!-- Header -->
+  <!-- Header (Unchanged) -->
   <header class="main-header">
     <nav class="nav-container">
       <div class="logo">
@@ -20,72 +24,54 @@
     </nav>
   </header>
 
+  <!-- Main Content -->
   <main class="container">
-    <!-- Mood Selection Section -->
-    <section class="emotion-section">
-      <h2>How are you feeling right now?</h2>
-      
-      <!-- Vertical container of shapes on the right side -->
-      <div class="mood-shapes-container">
-        <!-- 1) Stressed: circle -->
-        <div class="mood-shape-wrapper">
-          <div class="mood-shape stressed circle" data-mood="stressed"></div>
-          <p>Stressed</p>
+    <!-- One-Week Mood Tracker Section -->
+    <section class="mood-tracker-section">
+      <h2 class="section-title">One-Week Mood Tracker</h2>
+
+      <!-- A large circular "mood tracker wheel" at the center -->
+      <div class="mood-tracker-wheel">
+        <!-- Inner circle or knob -->
+        <div class="mood-tracker-center">
+          <p class="center-text">Your Mood</p>
         </div>
-        <!-- 2) Sad: square -->
-        <div class="mood-shape-wrapper">
-          <div class="mood-shape sad square" data-mood="sad"></div>
-          <p>Sad</p>
-        </div>
-        <!-- 3) Angry: triangle -->
-        <div class="mood-shape-wrapper">
-          <!-- For triangle, color is applied via border-bottom in CSS -->
-          <div class="mood-shape angry triangle" data-mood="angry"></div>
-          <p>Angry</p>
-        </div>
-        <!-- 4) Anxiety: rectangle -->
-        <div class="mood-shape-wrapper">
-          <div class="mood-shape anxiety rectangle" data-mood="anxiety"></div>
-          <p>Anxiety</p>
-        </div>
-        <!-- 5) Depressed: ellipse -->
-        <div class="mood-shape-wrapper">
-          <div class="mood-shape depressed ellipse" data-mood="depressed"></div>
-          <p>Depressed</p>
-        </div>
-        <!-- 6) Lonely: oval -->
-        <div class="mood-shape-wrapper">
-          <div class="mood-shape lonely oval" data-mood="lonely"></div>
-          <p>Lonely</p>
-        </div>
+      </div>
+
+      <!-- A row of day bubbles beneath the wheel to represent daily mood logs -->
+      <div class="day-bubbles-row">
+        <div class="day-bubble">Mon</div>
+        <div class="day-bubble">Tue</div>
+        <div class="day-bubble">Wed</div>
+        <div class="day-bubble">Thu</div>
+        <div class="day-bubble">Fri</div>
+        <div class="day-bubble">Sat</div>
+        <div class="day-bubble">Sun</div>
       </div>
     </section>
 
-    <!-- Inspirational Quote Section -->
-    <section class="quote-section">
-      <div class="inspirational-quote glass-box">
-        <h3>Daily Inspiration</h3>
+    <!-- Right-Side: Daily Inspiration -->
+    <section class="inspiration-section">
+      <h3>Daily Inspiration</h3>
+      <div class="inspiration-card">
         <p id="dailyQuote">
           "Every day is a new beginning. Take a deep breath and start again."
         </p>
       </div>
     </section>
+
+    <!-- Bottom row of mood buttons (bubbles) -->
+    <section class="mood-buttons-row">
+      <div class="mood-button stressed" data-mood="stressed">Stressed</div>
+      <div class="mood-button sad" data-mood="sad">Sad</div>
+      <div class="mood-button angry" data-mood="angry">Angry</div>
+      <div class="mood-button anxiety" data-mood="anxiety">Anxiety</div>
+      <div class="mood-button depressed" data-mood="depressed">Depressed</div>
+      <div class="mood-button lonely" data-mood="lonely">Lonely</div>
+    </section>
   </main>
 
-  <!-- Modal Overlay for Mood Logging (Journaling) -->
-  <div id="moodEntryModal" class="modal hidden">
-    <div class="modal-content">
-      <span class="close" id="closeMoodEntry">&times;</span>
-      <h2 id="modalMoodTitle">Mood Logging</h2>
-      <p id="modalDate"></p>
-      <p id="modalQuote"></p>
-      <textarea id="moodJournal" placeholder="Describe your thoughts..."></textarea>
-      <button id="saveMoodEntry" class="submit-btn">Save Entry</button>
-      <button id="cancelMoodEntry" class="submit-btn">Cancel</button>
-    </div>
-  </div>
-
-  <!-- Footer -->
+  <!-- Footer (Unchanged) -->
   <footer class="main-footer">
     <div class="footer-content">
       <div class="footer-section">
@@ -115,6 +101,7 @@
     </div>
   </footer>
 
+  <!-- Link to your script (optional, if needed) -->
   <script src="script.js"></script>
 </body>
 </html>
