@@ -2,8 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Local Storage key for mood entries
   const STORAGE_KEY = 'amieMoodLogs';
 
-  // Select all mood shapes (e.g., .mood-shape elements)
-  const moodShapes = document.querySelectorAll('.mood-shape');
+  // Select all mood buttons (instead of .mood-shape)
+  const moodButtons = document.querySelectorAll('.mood-button');
 
   // Pop-out journaling elements (thought bubble)
   const journalBubble = document.getElementById('journalBubble');
@@ -34,11 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let selectedMood = null;
 
-  // Function to open the journaling pop-out (thought bubble) with the selected mood
-  function openJournalBubble(mood, moodLabel) {
+  // Function to open the journaling pop-out with the selected mood
+  function openJournalBubble(mood) {
     selectedMood = mood;
-    // Update pop-out header with mood name (or moodLabel if available)
-    journalMoodTitle.textContent = `Mood: ${moodLabel || mood}`;
+    // Update pop-out header with mood name
+    journalMoodTitle.textContent = `Mood: ${mood}`;
     // Update inspirational quote based on selected mood
     journalInspiration.textContent = moodQuotes[mood] || "";
     // Clear previous journal text
@@ -52,17 +52,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // Function to close the journal bubble and reset background
   function closeJournalBubbleFunc() {
     journalBubble.classList.add('hidden');
+    // Return to original page background (adjust if you prefer a different default)
     document.body.style.background = "linear-gradient(135deg, #fafafa, #eaeaea)";
   }
 
-  // Attach click listeners to each mood shape button
-  moodShapes.forEach(shape => {
-    shape.addEventListener('click', () => {
-      const mood = shape.dataset.mood;
-      // Use shape's inner text as label if available; otherwise, use mood value
-      const moodLabel = shape.textContent.trim() || mood;
+  // Attach click listeners to each mood button
+  moodButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const mood = button.dataset.mood;
       if (mood) {
-        openJournalBubble(mood, moodLabel);
+        openJournalBubble(mood);
       }
     });
   });
