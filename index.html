@@ -6,10 +6,7 @@
   <title>Mood Record - Amie-Skills</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -27,61 +24,41 @@
     <!-- Mood Selection Section -->
     <section class="emotion-section">
       <h2>How are you feeling right now?</h2>
-
+      
       <!-- Vertical container of shapes on the right side -->
       <div class="mood-shapes-container">
         <!-- 1) Stressed: circle -->
         <div class="mood-shape-wrapper">
-          <div class="mood-shape stressed circle"></div>
+          <div class="mood-shape stressed circle" data-mood="stressed"></div>
           <p>Stressed</p>
         </div>
-
         <!-- 2) Sad: square -->
         <div class="mood-shape-wrapper">
-          <div class="mood-shape sad square"></div>
+          <div class="mood-shape sad square" data-mood="sad"></div>
           <p>Sad</p>
         </div>
-
         <!-- 3) Angry: triangle -->
         <div class="mood-shape-wrapper">
-          <!-- For a triangle, color is set via borders in CSS -->
-          <div class="mood-shape angry triangle"></div>
+          <!-- For triangle, color is applied via border-bottom in CSS -->
+          <div class="mood-shape angry triangle" data-mood="angry"></div>
           <p>Angry</p>
         </div>
-
         <!-- 4) Anxiety: rectangle -->
         <div class="mood-shape-wrapper">
-          <div class="mood-shape anxiety rectangle"></div>
+          <div class="mood-shape anxiety rectangle" data-mood="anxiety"></div>
           <p>Anxiety</p>
         </div>
-
         <!-- 5) Depressed: ellipse -->
         <div class="mood-shape-wrapper">
-          <div class="mood-shape depressed ellipse"></div>
+          <div class="mood-shape depressed ellipse" data-mood="depressed"></div>
           <p>Depressed</p>
         </div>
-
         <!-- 6) Lonely: oval -->
         <div class="mood-shape-wrapper">
-          <div class="mood-shape lonely oval"></div>
+          <div class="mood-shape lonely oval" data-mood="lonely"></div>
           <p>Lonely</p>
         </div>
       </div>
-    </section>
-
-    <!-- Mood Input Section -->
-    <section class="mood-input-section glass-box hidden" id="moodInputSection">
-      <h3>Tell us more about how you're feeling</h3>
-      <textarea
-        id="moodDescription"
-        placeholder="What's making you feel this way? (optional)"
-      ></textarea>
-      <div class="intensity-slider">
-        <label for="moodIntensity">How intense is this feeling? (1-10)</label>
-        <input type="range" id="moodIntensity" min="1" max="10" value="5" />
-        <span id="intensityValue">5</span>
-      </div>
-      <button id="saveMood" class="submit-btn">Save</button>
     </section>
 
     <!-- Inspirational Quote Section -->
@@ -93,70 +70,27 @@
         </p>
       </div>
     </section>
-
-    <!-- Calendar Section -->
-    <section class="calendar-section">
-      <h2>Your Mood Calendar</h2>
-      <div class="calendar-container glass-box">
-        <div class="calendar-header">
-          <button id="prevMonth" class="nav-btn">&lt;</button>
-          <h3 id="currentMonth"></h3>
-          <button id="nextMonth" class="nav-btn">&gt;</button>
-        </div>
-        <div class="weekdays">
-          <div>Sun</div>
-          <div>Mon</div>
-          <div>Tue</div>
-          <div>Wed</div>
-          <div>Thu</div>
-          <div>Fri</div>
-          <div>Sat</div>
-        </div>
-        <div class="calendar-grid" id="calendarGrid"></div>
-      </div>
-    </section>
-
-    <!-- Mood Statistics Section -->
-    <section class="stats-section">
-      <h2>Your Mood Patterns</h2>
-      <div class="stats-container glass-box">
-        <div class="chart-container">
-          <canvas id="moodChart"></canvas>
-        </div>
-        <div class="stats-summary">
-          <div class="stat-item">
-            <h4>Most Common Mood</h4>
-            <p id="commonMood">-</p>
-          </div>
-          <div class="stat-item">
-            <h4>Average Mood Intensity</h4>
-            <p id="avgIntensity">-</p>
-          </div>
-          <div class="stat-item">
-            <h4>Mood Entries</h4>
-            <p id="totalEntries">-</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Recent Mood Logs Section -->
-    <section class="mood-log-section">
-      <h2>Recent Mood Logs</h2>
-      <div id="moodLogContainer" class="mood-log-container">
-        <!-- Mood logs will be dynamically inserted here -->
-      </div>
-    </section>
   </main>
+
+  <!-- Modal Overlay for Mood Logging (Journaling) -->
+  <div id="moodEntryModal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close" id="closeMoodEntry">&times;</span>
+      <h2 id="modalMoodTitle">Mood Logging</h2>
+      <p id="modalDate"></p>
+      <p id="modalQuote"></p>
+      <textarea id="moodJournal" placeholder="Describe your thoughts..."></textarea>
+      <button id="saveMoodEntry" class="submit-btn">Save Entry</button>
+      <button id="cancelMoodEntry" class="submit-btn">Cancel</button>
+    </div>
+  </div>
 
   <!-- Footer -->
   <footer class="main-footer">
     <div class="footer-content">
       <div class="footer-section">
         <h3>About Amie</h3>
-        <p>
-          Your trusted emotional and mental health companion, available 24/7.
-        </p>
+        <p>Your trusted emotional and mental health companion, available 24/7.</p>
       </div>
       <div class="footer-section">
         <h3>Quick Links</h3>
