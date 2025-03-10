@@ -1,279 +1,103 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Local Storage key
+  // Local Storage key for mood entries
   const STORAGE_KEY = 'amieMoodLogs';
 
-  // --- Calendar Elements ---
-  const calendarGrid = document.getElementById('calendarGrid');
-  const currentMonthEl = document.getElementById('currentMonth');
-  const prevMonthBtn = document.getElementById('prevMonth');
-  const nextMonthBtn = document.getElementById('nextMonth');
+  // Select all mood shapes (e.g., .mood-shape elements)
+  const moodShapes = document.querySelectorAll('.mood-shape');
 
-  // --- Modal Elements for Calendar Mood Logging ---
+  // Modal Elements for mood logging overlay
   const moodEntryModal = document.getElementById('moodEntryModal');
   const modalDateEl = document.getElementById('modalDate');
-  const modalMoodBtns = moodEntryModal.querySelectorAll('.mood-btn');
-  const moodReasonField = document.getElementById('moodReason');
-  const saveCalendarMoodBtn = document.getElementById('saveCalendarMood');
-  const cancelCalendarMoodBtn = document.getElementById('cancelCalendarMood');
+  const modalQuoteEl = document.getElementById('modalQuote');
+  const moodJournal = document.getElementById('moodJournal');
+  const saveMoodEntryBtn = document.getElementById('saveMoodEntry');
+  const cancelMoodEntryBtn = document.getElementById('cancelMoodEntry');
 
-  // --- Chart Element ---
-  const moodChartCtx = document.getElementById('moodChart').getContext('2d');
-  let moodChart;
-
-  // --- Other Elements ---
-  const moodLogContainer = document.getElementById('mood-log');
-
-  // Define mood colors (updated from Amie-Skills)
+  // Define mood colors and corresponding inspirational quotes
   const moodColors = {
     stressed: '#9F58B0',
     sad: '#003d82',
-    angry: '#FF4500',       // Updated to Warm Orange-Red
+    angry: '#FF5A5F',
     anxiety: '#FFA500',
-    depressed: '#002147',   // Representative color; calendar cells for depressed use gradient
+    depressed: '#002147',
     lonely: '#999999'
   };
 
-  // Global variables for calendar view and modal selection
-  let currentYear = new Date().getFullYear();
-  let currentMonth = new Date().getMonth(); // 0-indexed
-  let selectedDate = null; // Format: YYYY-MM-DD
-  let modalSelectedMood = null;
+  const moodQuotes = {
+    stressed: "Take a deep breath, you got this.",
+    sad: "Even the darkest night will end and the sun will rise.",
+    angry: "Let your passion fuel your strength, not your anger.",
+    anxiety: "Inhale courage, exhale fear.",
+    depressed: "Every day is a new beginning.",
+    lonely: "You are never truly alone; your strength is within you."
+  };
 
-  // -------------------------
-  // Calendar Generation
-  // -------------------------
-  function generateCalendar(year, month) {
-    calendarGrid.innerHTML = '';
-    const monthNames = ["January", "February", "March", "April", "May", "June",
-                        "July", "August", "September", "October", "November", "December"];
-    currentMonthEl.textContent = `${monthNames[month]} ${year}`;
-    
-    // Determine the first day index and days in the month
-    const firstDayIndex = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    
-    // Add blank cells for days before the first day of the month
-    for (let i = 0; i < firstDayIndex; i++) {
-      const blankCell = document.createElement('div');
-      blankCell.className = 'day-cell empty';
-      calendarGrid.appendChild(blankCell);
-    }
-    
-    // Create cells for each day
-    for (let day = 1; day <= daysInMonth; day++) {
-      const dayCell = document.createElement('div');
-      dayCell.className = 'day-cell';
-      dayCell.textContent = day;
-      const dateStr = new Date(year, month, day).toISOString().split('T')[0];
-      dayCell.dataset.date = dateStr;
-      dayCell.addEventListener('click', () => openMoodModal(dateStr));
-      calendarGrid.appendChild(dayCell);
-    }
-    // Update visual highlights on the calendar based on logged moods
-    updateCalendarHighlights();
-  }
+  let selectedMood = null;
 
-  // -------------------------
-  // Modal Functions
-  // -------------------------
-  function openMoodModal(dateStr) {
-    selectedDate = dateStr;
-    modalDateEl.textContent = dateStr;
+  // Function to open the mood logging modal with the selected mood
+  function openMoodEntryModal(mood) {
+    selectedMood = mood;
+    // Set today's date in the modal
+    const today = new Date();
+    modalDateEl.textContent = today.toLocaleDateString();
+    // Set the inspirational quote based on the selected mood
+    modalQuoteEl.textContent = moodQuotes[mood] || "";
+    // Clear previous journal input
+    moodJournal.value = "";
+    // Change the background color (lightly tinted) based on mood
+    document.body.style.backgroundColor = moodColors[mood] || "#fafafa";
+    // Show the modal by removing the 'hidden' class (ensure your CSS hides the modal by default)
     moodEntryModal.classList.remove('hidden');
-    // Reset modal selections
-    modalMoodBtns.forEach(btn => btn.classList.remove('selected'));
-    modalSelectedMood = null;
-    moodReasonField.value = '';
   }
 
-  function closeMoodModal() {
+  // Function to close the mood logging modal and reset background
+  function closeMoodEntryModal() {
     moodEntryModal.classList.add('hidden');
+    // Reset background to default gradient
+    document.body.style.background = "linear-gradient(135deg, #fafafa, #eaeaea)";
   }
 
-  // Attach event listeners for modal mood buttons
-  modalMoodBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      modalMoodBtns.forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      modalSelectedMood = btn.dataset.mood;
+  // Attach click listeners to each mood shape button
+  moodShapes.forEach(shape => {
+    shape.addEventListener('click', () => {
+      const mood = shape.dataset.mood;
+      if (mood) {
+        openMoodEntryModal(mood);
+      }
     });
   });
 
-  // Save mood entry from modal
-  saveCalendarMoodBtn.addEventListener('click', () => {
-    if (!modalSelectedMood) {
+  // Save mood entry when Save button is clicked
+  saveMoodEntryBtn.addEventListener('click', () => {
+    if (!selectedMood) {
       alert('Please select a mood.');
       return;
     }
-    // Check if already two logs exist for the selected day
-    let moodLogs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    const logsForDay = moodLogs.filter(entry => entry.date === selectedDate);
-    if (logsForDay.length >= 2) {
-      alert('You can only log your mood twice a day.');
-      return;
-    }
-    const newEntry = {
-      date: selectedDate,
-      mood: modalSelectedMood,
-      reason: moodReasonField.value.trim(),
+    const journalText = moodJournal.value.trim();
+    const entry = {
+      date: new Date().toISOString().split('T')[0],
+      mood: selectedMood,
+      quote: moodQuotes[selectedMood],
+      journal: journalText,
       timestamp: new Date().toISOString()
     };
-    moodLogs.push(newEntry);
+    // Retrieve existing entries from localStorage
+    let moodLogs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    moodLogs.push(entry);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(moodLogs));
-    closeMoodModal();
-    renderMoodHistory();
-    renderChart();
-    updateCalendarHighlights();
+    alert('Mood entry saved!');
+    closeMoodEntryModal();
   });
 
-  // Cancel button for modal
-  cancelCalendarMoodBtn.addEventListener('click', () => {
-    closeMoodModal();
+  // Cancel button to close the modal without saving
+  cancelMoodEntryBtn.addEventListener('click', () => {
+    closeMoodEntryModal();
   });
 
-  // -------------------------
-  // Calendar Highlights
-  // -------------------------
-  function updateCalendarHighlights() {
-    let moodLogs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    document.querySelectorAll('.day-cell').forEach(cell => {
-      if (cell.classList.contains('empty')) return;
-      const cellDate = cell.dataset.date;
-      const logsForDay = moodLogs.filter(entry => entry.date === cellDate);
-      if (logsForDay.length > 0) {
-        // Use the mood color of the latest entry
-        const latestEntry = logsForDay[logsForDay.length - 1];
-        if (latestEntry.mood === 'depressed') {
-          cell.style.background = 'linear-gradient(45deg, #002147, #3B4252)';
-        } else {
-          cell.style.backgroundColor = moodColors[latestEntry.mood] || '';
-        }
-      } else {
-        cell.style.backgroundColor = '';
-        cell.style.background = '';
-      }
-    });
-  }
-
-  // -------------------------
-  // Mood History Rendering
-  // -------------------------
-  function renderMoodHistory() {
-    moodLogContainer.innerHTML = '';
-    let moodLogs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    // Sort so newest entries appear first
-    moodLogs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-    moodLogs.forEach(log => {
-      const card = document.createElement('div');
-      card.className = 'mood-card';
-      const dateObj = new Date(log.timestamp);
-      const dateString = dateObj.toLocaleString([], {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-      card.innerHTML = `
-        <div class="card-time">${dateString}</div>
-        <div class="card-mood">${log.date} - ${log.mood}</div>
-        <div class="card-notes">${log.reason || ''}</div>
-      `;
-      moodLogContainer.appendChild(card);
-    });
-  }
-
-  // -------------------------
-  // Chart.js Rendering
-  // -------------------------
-  function renderChart() {
-    let moodLogs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    // Map moods to numeric values
-    const moodValueMap = {
-      stressed: 5,
-      sad: 4,
-      angry: 3,
-      anxiety: 2,
-      depressed: 1,
-      lonely: 0
-    };
-    // Sort logs chronologically
-    moodLogs.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-    const labels = moodLogs.map(log => {
-      const d = new Date(log.timestamp);
-      return d.toLocaleDateString([], { month: 'short', day: 'numeric' }) +
-             ` (${log.date})`;
-    });
-    const dataValues = moodLogs.map(log => moodValueMap[log.mood]);
-    if (moodChart) moodChart.destroy();
-    moodChart = new Chart(moodChartCtx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Mood Intensity',
-          data: dataValues,
-          fill: false,
-          borderColor: '#0056b3',
-          backgroundColor: '#0056b3',
-          tension: 0.3,
-          pointBackgroundColor: moodLogs.map(log => moodColors[log.mood] || '#0056b3'),
-          pointRadius: 6
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          y: {
-            beginAtZero: true,
-            max: 5,
-            ticks: {
-              stepSize: 1,
-              callback: (value) => {
-                switch(value) {
-                  case 5: return 'Stressed';
-                  case 4: return 'Sad';
-                  case 3: return 'Angry';
-                  case 2: return 'Anxiety';
-                  case 1: return 'Depressed';
-                  case 0: return 'Lonely';
-                  default: return '';
-                }
-              }
-            }
-          }
-        },
-        plugins: {
-          legend: { display: false }
-        }
-      }
-    });
-  }
-
-  // -------------------------
-  // Calendar Navigation
-  // -------------------------
-  prevMonthBtn.addEventListener('click', () => {
-    currentMonth--;
-    if (currentMonth < 0) {
-      currentMonth = 11;
-      currentYear--;
+  // Optional: Close modal when clicking outside of the modal content
+  moodEntryModal.addEventListener('click', (e) => {
+    if (e.target === moodEntryModal) {
+      closeMoodEntryModal();
     }
-    generateCalendar(currentYear, currentMonth);
   });
-
-  nextMonthBtn.addEventListener('click', () => {
-    currentMonth++;
-    if (currentMonth > 11) {
-      currentMonth = 0;
-      currentYear++;
-    }
-    generateCalendar(currentYear, currentMonth);
-  });
-
-  // Initial render
-  generateCalendar(currentYear, currentMonth);
-  renderMoodHistory();
-  renderChart();
 });
