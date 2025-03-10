@@ -77,20 +77,16 @@ main {
   padding: 2rem;
   background: rgba(255, 255, 255, 0.9);
   border-radius: 15px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-/* 
-  ===== Removed Old Emotion Grid & Boxes ===== 
-  .emotion-grid { ... }
-  .emotion-box { ... }
-*/
+/* ===== Removed Old Emotion Grid & Boxes ===== */
 
 /* NEW: Mood Shapes Section */
 /* Container for the new vertical mood shapes on the right */
 .mood-shapes-container {
-  position: absolute; /* Adjust to 'fixed' if you want them to remain visible on scroll */
+  position: absolute; /* Change to fixed if desired */
   top: 50%;
   right: 2rem;
   transform: translateY(-50%);
@@ -121,7 +117,7 @@ main {
   background-color: #003d82;
 }
 .angry {
-  /* For triangle, color will be applied via border-bottom */
+  /* For triangle, color via border-bottom */
 }
 .anxiety {
   background-color: #FFA500;
@@ -148,7 +144,7 @@ main {
 }
 
 /* Triangle (e.g., for angry) */
-/* Using border technique – override .angry color with border-bottom */
+/* Using border technique – set angry color on border-bottom */
 .triangle {
   width: 0;
   height: 0;
@@ -179,7 +175,6 @@ main {
 
 /* Mood Input Section */
 .mood-input-section {
-  /* Existing styles; ensure it works responsively */
   background: rgba(255, 255, 255, 0.9);
   border-radius: 15px;
   padding: 2rem;
