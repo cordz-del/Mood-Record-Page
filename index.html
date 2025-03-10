@@ -6,15 +6,12 @@
   <title>Mood Record - Amie-Skills</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <!-- If you need Chart.js for future expansions -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <!-- Header (Unchanged) -->
+  <!-- Header (DO NOT CHANGE) -->
   <header class="main-header">
     <nav class="nav-container">
       <div class="logo">
@@ -30,37 +27,34 @@
     <section class="mood-tracker-section">
       <h2 class="section-title">One-Week Mood Tracker</h2>
 
-      <!-- A large circular "mood tracker wheel" at the center -->
+      <!-- Large circular mood tracker wheel at the center -->
       <div class="mood-tracker-wheel">
-        <!-- Inner circle or knob -->
         <div class="mood-tracker-center">
           <p class="center-text">Your Mood</p>
         </div>
       </div>
 
-      <!-- A row of day bubbles beneath the wheel to represent daily mood logs -->
+      <!-- Row of day bubbles -->
       <div class="day-bubbles-row">
-        <div class="day-bubble">Mon</div>
-        <div class="day-bubble">Tue</div>
-        <div class="day-bubble">Wed</div>
-        <div class="day-bubble">Thu</div>
-        <div class="day-bubble">Fri</div>
-        <div class="day-bubble">Sat</div>
-        <div class="day-bubble">Sun</div>
+        <div class="day-bubble" data-day="Mon">Mon</div>
+        <div class="day-bubble" data-day="Tue">Tue</div>
+        <div class="day-bubble" data-day="Wed">Wed</div>
+        <div class="day-bubble" data-day="Thu">Thu</div>
+        <div class="day-bubble" data-day="Fri">Fri</div>
+        <div class="day-bubble" data-day="Sat">Sat</div>
+        <div class="day-bubble" data-day="Sun">Sun</div>
       </div>
     </section>
 
-    <!-- Right-Side: Daily Inspiration -->
+    <!-- Daily Inspiration Section -->
     <section class="inspiration-section">
       <h3>Daily Inspiration</h3>
       <div class="inspiration-card">
-        <p id="dailyQuote">
-          "Every day is a new beginning. Take a deep breath and start again."
-        </p>
+        <p id="dailyQuote">"Every day is a new beginning. Take a deep breath and start again."</p>
       </div>
     </section>
 
-    <!-- Bottom row of mood buttons (bubbles) -->
+    <!-- Bottom row of mood buttons -->
     <section class="mood-buttons-row">
       <div class="mood-button stressed" data-mood="stressed">Stressed</div>
       <div class="mood-button sad" data-mood="sad">Sad</div>
@@ -71,7 +65,16 @@
     </section>
   </main>
 
-  <!-- Footer (Unchanged) -->
+  <!-- Pop-out Journaling Thought Bubble (hidden by default) -->
+  <div id="journalBubble" class="journal-bubble hidden">
+    <span class="close" id="closeJournalBubble">&times;</span>
+    <h2 id="journalMoodTitle">Mood: [Mood]</h2>
+    <p id="journalInspiration">"Inspirational quote here."</p>
+    <textarea id="journalText" placeholder="Write your journal note here..."></textarea>
+    <button id="saveJournal" class="submit-btn">Save Journal</button>
+  </div>
+
+  <!-- Footer (DO NOT CHANGE) -->
   <footer class="main-footer">
     <div class="footer-content">
       <div class="footer-section">
@@ -101,7 +104,6 @@
     </div>
   </footer>
 
-  <!-- Link to your script (optional, if needed) -->
   <script src="script.js"></script>
 </body>
 </html>
