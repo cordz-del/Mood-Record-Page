@@ -81,93 +81,121 @@ main {
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-/* Mood Form */
-.mood-form {
+/* 
+  ===== Removed Old Emotion Grid & Boxes ===== 
+  .emotion-grid { ... }
+  .emotion-box { ... }
+*/
+
+/* NEW: Mood Shapes Section */
+/* Container for the new vertical mood shapes on the right */
+.mood-shapes-container {
+  position: absolute; /* Adjust to 'fixed' if you want them to remain visible on scroll */
+  top: 50%;
+  right: 2rem;
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 1.5rem;
 }
 
-.form-group {
+/* Wrapper for each shape + label */
+.mood-shape-wrapper {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 0.5rem;
 }
 
-.form-group label {
-  font-weight: 600;
-  color: #333;
-  font-size: 1.1rem;
+/* Base class for each mood shape */
+.mood-shape {
+  display: inline-block;
 }
 
-.form-group input,
-.form-group textarea,
-.form-group select {
-  padding: 1rem;
-  border: 2px solid #e1e1e1;
-  border-radius: 8px;
-  font-size: 1rem;
-  background: #ffffff;
-  transition: all 0.3s ease;
+/* Toned-down Emotion Colors */
+.stressed {
+  background-color: #9F58B0;
+}
+.sad {
+  background-color: #003d82;
+}
+.angry {
+  /* For triangle, color will be applied via border-bottom */
+}
+.anxiety {
+  background-color: #FFA500;
+}
+.depressed {
+  background: linear-gradient(45deg, #002147, #3B4252);
+}
+.lonely {
+  background-color: #999999;
 }
 
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-  border-color: #0056b3;
-  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
-  outline: none;
-}
-
-/* Mood Slider */
-.mood-slider {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 12px;
-  border-radius: 6px;
-  background: linear-gradient(to right, #ff4d4d, #ffff4d, #4dff4d);
-  outline: none;
-  margin: 1rem 0;
-}
-
-.mood-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 24px;
-  height: 24px;
+/* Shape Classes */
+/* Circle (e.g., for stressed) */
+.circle {
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  background: #0056b3;
-  cursor: pointer;
-  border: 2px solid #ffffff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  transition: all 0.2s ease;
 }
 
-.mood-slider::-webkit-slider-thumb:hover {
-  transform: scale(1.2);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+/* Square (e.g., for sad) */
+.square {
+  width: 80px;
+  height: 80px;
 }
 
-/* Submit Button */
-.submit-btn {
-  background: linear-gradient(45deg, #0056b3, #007bff);
-  color: white;
-  padding: 1rem 2rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 86, 179, 0.2);
+/* Triangle (e.g., for angry) */
+/* Using border technique – override .angry color with border-bottom */
+.triangle {
+  width: 0;
+  height: 0;
+  border-left: 40px solid transparent;
+  border-right: 40px solid transparent;
+  border-bottom: 80px solid #FF5A5F; /* Angry color */
 }
 
-.submit-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 86, 179, 0.3);
+/* Rectangle (e.g., for anxiety) */
+.rectangle {
+  width: 100px;
+  height: 50px;
 }
 
-.submit-btn:active {
-  transform: translateY(1px);
+/* Ellipse (e.g., for depressed) */
+.ellipse {
+  width: 100px;
+  height: 60px;
+  border-radius: 50% / 30%;
+}
+
+/* Oval (e.g., for lonely) */
+.oval {
+  width: 80px;
+  height: 50px;
+  border-radius: 50% / 50%;
+}
+
+/* Mood Input Section */
+.mood-input-section {
+  /* Existing styles; ensure it works responsively */
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 800px;
+}
+
+/* Inspirational Quote Section */
+.quote-section {
+  margin: 2rem auto;
+}
+.inspirational-quote {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
 }
 
 /* Calendar Section */
@@ -177,7 +205,7 @@ main {
   margin: 2rem auto;
   background: #ffffff;
   border-radius: 15px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
   padding: 2rem;
 }
 
@@ -203,7 +231,7 @@ main {
 .day-cell:hover {
   background: #e9ecef;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 /* Mood Cards */
@@ -218,7 +246,7 @@ main {
   background: #ffffff;
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   transition: transform 0.3s ease;
 }
 
@@ -247,7 +275,7 @@ main {
   border-radius: 15px;
   width: 90%;
   max-width: 500px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
 }
 
 /* Footer – DO NOT CHANGE */
@@ -255,7 +283,7 @@ main {
   background-color: #f8f8f8;
   padding: 4rem 2rem 1rem;
   margin-top: auto;
-  box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -2px 15px rgba(0,0,0,0.1);
 }
 
 .footer-content {
@@ -325,6 +353,12 @@ main {
   .mood-cards-container {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
+  
+  /* Adjust mood shapes container on smaller screens */
+  .mood-shapes-container {
+    right: 1rem;
+    gap: 1rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -343,4 +377,23 @@ main {
   .mood-cards-container {
     grid-template-columns: 1fr;
   }
+  
+  /* Further adjust mood shapes sizes for mobile */
+  .mood-shapes-container {
+    right: 0.5rem;
+    gap: 0.75rem;
+  }
+  
+  .circle, .square, .rectangle, .ellipse, .oval {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .triangle {
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-bottom: 50px solid #FF5A5F;
+  }
 }
+
+/* --- Modal Styles for Create Profile (if applicable) --- */
