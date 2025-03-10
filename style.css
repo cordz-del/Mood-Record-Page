@@ -249,7 +249,39 @@ main {
   transform: translateY(-5px);
 }
 
-/* Modal Styles */
+/* ---------------------------------------------------------
+   New: Journal Bubble (Thought Bubble) Styles
+   This pop-out replaces the full-screen modal.
+--------------------------------------------------------- */
+.journal-bubble {
+  position: fixed;
+  bottom: 20%;
+  right: 2rem;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 25px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  max-width: 400px;
+  z-index: 3000;
+  /* Create a bubble tail */
+  position: fixed;
+}
+.journal-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -20px;
+  right: 20px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: #fff transparent transparent transparent;
+}
+.journal-bubble.hidden {
+  display: none;
+}
+
+/* ---------------------------------------------------------
+   Modal Styles (for other modals, if applicable)
+--------------------------------------------------------- */
 .modal {
   position: fixed;
   top: 0;
@@ -273,7 +305,9 @@ main {
   box-shadow: 0 10px 40px rgba(0,0,0,0.2);
 }
 
-/* Footer – DO NOT CHANGE */
+/* ---------------------------------------------------------
+   Footer – DO NOT CHANGE
+--------------------------------------------------------- */
 .main-footer {
   background-color: #f8f8f8;
   padding: 4rem 2rem 1rem;
@@ -323,7 +357,9 @@ main {
   font-size: 0.9rem;
 }
 
-/* Responsive Design */
+/* ---------------------------------------------------------
+   Responsive Design
+--------------------------------------------------------- */
 @media (max-width: 768px) {
   .main-header {
     padding: 1rem;
@@ -390,5 +426,3 @@ main {
     border-bottom: 50px solid #FF5A5F;
   }
 }
-
-/* --- Modal Styles for Create Profile (if applicable) --- */
