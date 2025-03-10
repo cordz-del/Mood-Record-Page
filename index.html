@@ -6,7 +6,10 @@
   <title>Mood Record - Amie-Skills</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+    rel="stylesheet"
+  />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -24,41 +27,58 @@
     <!-- Mood Selection Section -->
     <section class="emotion-section">
       <h2>How are you feeling right now?</h2>
-      <div class="emotion-grid">
-        <button class="emotion-box" data-mood="happy" style="background-color: #FFD700">
-          <h3>😊 Happy</h3>
-          <p>Feeling joyful and content</p>
-        </button>
-        <button class="emotion-box" data-mood="calm" style="background-color: #98FB98">
-          <h3>😌 Calm</h3>
-          <p>Feeling peaceful and relaxed</p>
-        </button>
-        <button class="emotion-box" data-mood="stressed" style="background-color: #9F58B0">
-          <h3>😖 Stressed</h3>
-          <p>Feeling overwhelmed or tense</p>
-        </button>
-        <button class="emotion-box" data-mood="sad" style="background-color: #003d82">
-          <h3>😢 Sad</h3>
-          <p>Feeling down or unhappy</p>
-        </button>
-        <button class="emotion-box" data-mood="angry" style="background-color: #FF4500">
-          <h3>😠 Angry</h3>
-          <p>Feeling frustrated or upset</p>
-        </button>
-        <button class="emotion-box" data-mood="anxious" style="background-color: #FFA500">
-          <h3>😟 Anxious</h3>
-          <p>Feeling worried or nervous</p>
-        </button>
+
+      <!-- Vertical container of shapes on the right side -->
+      <div class="mood-shapes-container">
+        <!-- 1) Stressed: circle -->
+        <div class="mood-shape-wrapper">
+          <div class="mood-shape stressed circle"></div>
+          <p>Stressed</p>
+        </div>
+
+        <!-- 2) Sad: square -->
+        <div class="mood-shape-wrapper">
+          <div class="mood-shape sad square"></div>
+          <p>Sad</p>
+        </div>
+
+        <!-- 3) Angry: triangle -->
+        <div class="mood-shape-wrapper">
+          <!-- For a triangle, color is set via borders in CSS -->
+          <div class="mood-shape angry triangle"></div>
+          <p>Angry</p>
+        </div>
+
+        <!-- 4) Anxiety: rectangle -->
+        <div class="mood-shape-wrapper">
+          <div class="mood-shape anxiety rectangle"></div>
+          <p>Anxiety</p>
+        </div>
+
+        <!-- 5) Depressed: ellipse -->
+        <div class="mood-shape-wrapper">
+          <div class="mood-shape depressed ellipse"></div>
+          <p>Depressed</p>
+        </div>
+
+        <!-- 6) Lonely: oval -->
+        <div class="mood-shape-wrapper">
+          <div class="mood-shape lonely oval"></div>
+          <p>Lonely</p>
+        </div>
       </div>
     </section>
 
     <!-- Mood Input Section -->
     <section class="mood-input-section glass-box hidden" id="moodInputSection">
       <h3>Tell us more about how you're feeling</h3>
-      <textarea id="moodDescription" placeholder="What's making you feel this way? (optional)"></textarea>
+      <textarea
+        id="moodDescription"
+        placeholder="What's making you feel this way? (optional)"
+      ></textarea>
       <div class="intensity-slider">
         <label for="moodIntensity">How intense is this feeling? (1-10)</label>
-        <input type="range" id="moodIntensity" min="1" max="10" value="5">
+        <input type="range" id="moodIntensity" min="1" max="10" value="5" />
         <span id="intensityValue">5</span>
       </div>
       <button id="saveMood" class="submit-btn">Save</button>
@@ -68,7 +88,9 @@
     <section class="quote-section">
       <div class="inspirational-quote glass-box">
         <h3>Daily Inspiration</h3>
-        <p id="dailyQuote">"Every day is a new beginning. Take a deep breath and start again."</p>
+        <p id="dailyQuote">
+          "Every day is a new beginning. Take a deep breath and start again."
+        </p>
       </div>
     </section>
 
@@ -132,7 +154,9 @@
     <div class="footer-content">
       <div class="footer-section">
         <h3>About Amie</h3>
-        <p>Your trusted emotional and mental health companion, available 24/7.</p>
+        <p>
+          Your trusted emotional and mental health companion, available 24/7.
+        </p>
       </div>
       <div class="footer-section">
         <h3>Quick Links</h3>
