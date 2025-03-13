@@ -1,4 +1,21 @@
 document.addEventListener("DOMContentLoaded", async () => {
+  // Register a custom shadow plugin to simulate a 3D effect for the chart
+  const shadowPlugin = {
+    id: 'shadowPlugin',
+    beforeDatasetDraw(chart, args, options) {
+      const ctx = chart.ctx;
+      ctx.save();
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+      ctx.shadowBlur = 4;
+      ctx.shadowOffsetX = 2;
+      ctx.shadowOffsetY = 2;
+    },
+    afterDatasetDraw(chart, args, options) {
+      chart.ctx.restore();
+    }
+  };
+  Chart.register(shadowPlugin);
+
   // Create container for the monthly stats graph
   const container = document.createElement("div");
   container.className = "monthly-stats-container";
@@ -8,9 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   canvas.id = "monthlyStatsChart";
   container.appendChild(canvas);
   
-  // Append the container in a designated section.
-  // For example, if you have a dedicated section for monthly stats in index.html,
-  // ensure it has an id="monthlyStatsSection". Otherwise, append to the main container.
+  // Append the container in the designated section (#monthlyStatsSection)
   let statsSection = document.getElementById("monthlyStatsSection");
   if (!statsSection) {
     statsSection = document.createElement("div");
@@ -23,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   let mostTracked = { mood: "none", count: 0 };
   let leastTracked = { mood: "none", count: 0 };
   
-  // Define mood-to-color mapping (should be consistent with other parts of your app)
+  // Define mood-to-color mapping (consistent with your app)
   const moodColors = {
     stressed: "#9F58B0",
     sad: "#003d82",
@@ -34,8 +49,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
   
   try {
-    // Replace with your actual backend URL
-    const response = await fetch("https://your-replit-url/mood-stats");
+    // Use the defined API_BASE_URL to fetch monthly stats
+    const response = await fetch(`${API_BASE_URL}/mood-stats`);
     const data = await response.json();
     // Expected data format:
     // { mostTracked: { mood: "stressed", count: 15 }, leastTracked: { mood: "lonely", count: 3 } }
@@ -47,7 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Error fetching monthly stats:", error);
   }
   
-  // Create the Chart.js bar chart with two bars: one for most tracked and one for least tracked mood
+  // Create the Chart.js bar chart with two bars
   new Chart(canvas, {
     type: "bar",
     data: {
@@ -66,9 +81,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       scales: {
         y: {
           beginAtZero: true,
-          ticks: {
-            precision: 0
-          }
+          ticks: { precision: 0 }
         }
       },
       plugins: {
@@ -77,9 +90,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             label: (context) => `${context.parsed.y} times`
           }
         },
-        legend: {
-          display: false
-        }
+        legend: { display: false }
       },
       responsive: true,
       maintainAspectRatio: false
