@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Local Storage key for mood entries
+  // Local Storage key for mood entries (fallback or additional logging if needed)
   const STORAGE_KEY = 'amieMoodLogs';
 
-  // Select all mood buttons (instead of .mood-shape)
+  // Select all mood buttons
   const moodButtons = document.querySelectorAll('.mood-button');
 
-  // Pop-out journaling elements (thought bubble)
+  // Pop-out journaling elements
   const journalBubble = document.getElementById('journalBubble');
   const journalMoodTitle = document.getElementById('journalMoodTitle');
   const journalInspiration = document.getElementById('journalInspiration');
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Function to close the journal bubble and reset background
   function closeJournalBubbleFunc() {
     journalBubble.classList.add('hidden');
-    // Return to original page background (adjust if you prefer a different default)
+    // Reset background to default gradient
     document.body.style.background = "linear-gradient(135deg, #fafafa, #eaeaea)";
   }
 
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Save journal entry when Save button is clicked
-  saveJournalBtn.addEventListener('click', () => {
+  saveJournalBtn.addEventListener('click', async () => {
     if (!selectedMood) {
       alert('Please select a mood.');
       return;
@@ -80,18 +80,36 @@ document.addEventListener('DOMContentLoaded', () => {
       journal: journalTextValue,
       timestamp: new Date().toISOString()
     };
-    // Retrieve existing entries from localStorage and add the new one
-    let moodLogs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    moodLogs.push(entry);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(moodLogs));
-    alert('Mood entry saved!');
-    closeJournalBubbleFunc();
+
+    try {
+      // Send the mood entry to your backend (Replit & MongoDB)
+      const response = await fetch(`${API_BASE_URL}/mood-entries`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(entry)
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert('Mood entry saved!');
+        closeJournalBubbleFunc();
+
+        // Optionally, also save to localStorage as a fallback/log (if needed)
+        let moodLogs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        moodLogs.push(entry);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(moodLogs));
+      } else {
+        throw new Error(data.error || 'Failed to save mood entry.');
+      }
+    } catch (error) {
+      console.error('Error saving mood entry:', error);
+      alert('Error saving mood entry.');
+    }
   });
 
-  // Attach click listener to the close button
-  closeJournalBubble.addEventListener('click', () => {
-    closeJournalBubbleFunc();
-  });
+  // Attach click listener to the close button for the journal bubble
+  closeJournalBubble.addEventListener('click', closeJournalBubbleFunc);
 
   // Optional: Close the journal bubble when clicking outside its content
   journalBubble.addEventListener('click', (e) => {
@@ -99,4 +117,32 @@ document.addEventListener('DOMContentLoaded', () => {
       closeJournalBubbleFunc();
     }
   });
+
+  // Logout functionality: Clear stored data and redirect to Log-in-Amie page
+  const logoutButton = document.getElementById('logoutButton');
+  if (logoutButton) {
+    logoutButton.addEventListener('click', async function() {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) throw new Error('No authentication token found');
+        const response = await fetch(`${API_BASE_URL}/api/logout`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include'
+        });
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.error || 'Logout failed');
+        }
+        localStorage.clear();
+        window.location.href = 'https://cordz-del.github.io/Log-in-Amie/';
+      } catch (error) {
+        console.error('Logout error:', error);
+        alert('Error logging out. Please try again.');
+      }
+    });
+  }
 });
