@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Insert a canvas into the mood tracker wheel container if not already present.
+  // Insert (or reuse) a canvas inside the mood tracker wheel container.
   const wheel = document.querySelector(".mood-tracker-wheel");
   let canvas = document.getElementById("moodCircleChart");
   if (!canvas) {
@@ -8,11 +8,11 @@ document.addEventListener("DOMContentLoaded", () => {
     wheel.appendChild(canvas);
   }
 
-  // Total segments: 2 moods per day for 7 days.
+  // Total segments: 2 moods per day for 7 days = 14 segments.
   const totalSegments = 14;
   const defaultColor = "#ccc"; // default gray for no mood input
 
-  // Initial segment colors (all default)
+  // Initial segment colors: all segments start with the default color.
   const segmentColors = new Array(totalSegments).fill(defaultColor);
 
   // Set up the Chart.js donut chart data.
@@ -30,14 +30,13 @@ document.addEventListener("DOMContentLoaded", () => {
     type: "doughnut",
     data: chartData,
     options: {
-      cutout: "70%", // adjust the inner radius as needed
+      cutout: "70%", // Inner radius adjustment for visual style
       plugins: {
         legend: { display: false },
         tooltip: {
           callbacks: {
             label: function (context) {
-              // Customize the tooltip: here we simply display the mood's color.
-              // You can add additional information (e.g., mood name, count, etc.)
+              // Display the current segment color in the tooltip.
               const moodColor = context.dataset.backgroundColor[context.dataIndex];
               return `Color: ${moodColor}`;
             }
@@ -52,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize the Chart.js chart.
   const moodChart = new Chart(canvas, chartOptions);
 
-  // Mood-to-color mapping (adjust colors as needed)
+  // Mood-to-color mapping (update colors as needed)
   const moodColors = {
     stressed: "#9F58B0",
     sad: "#003d82",
@@ -74,11 +73,11 @@ document.addEventListener("DOMContentLoaded", () => {
     moodChart.update();
   };
 
-  // Optional: update the entire mood circle at once.
+  // Expose a function to update the entire mood circle at once.
   // Pass an array (up to 14 items) of mood names.
   window.updateMoodCircle = function(moodArray) {
     const newColors = moodArray.map(m => moodColors[m] || defaultColor);
-    // Ensure we always have 14 segments.
+    // Ensure the array always has exactly 14 segments.
     while (newColors.length < totalSegments) {
       newColors.push(defaultColor);
     }
@@ -86,8 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
     moodChart.update();
   };
 
-  // For demonstration purposes, you might simulate mood inputs like so:
-  // Uncomment the following code to simulate updating segments every 2 seconds.
+  // For demonstration purposes, you can simulate mood updates:
   /*
   let demoIndex = 0;
   const demoMoods = ["stressed", "sad", "angry", "anxiety", "depressed", "lonely"];
