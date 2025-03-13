@@ -9,7 +9,8 @@
 
 html, body {
   font-family: Arial, sans-serif;
-  background-color: #fafafa;
+  /* Fixed background to avoid dynamic changes affecting the whole page */
+  background: linear-gradient(135deg, #fafafa, #eaeaea);
   color: #333;
   display: flex;
   flex-direction: column;
@@ -133,11 +134,12 @@ html, body {
   color: #555;
 }
 
-/* Day Bubbles Row */
+/* ---------------------------------------------------------
+   5) Day Bubbles Row
+--------------------------------------------------------- */
 .day-bubbles-row {
   display: flex;
-  justify-content: center;
-  gap: 1rem;
+  justify-content: space-around;  /* Evenly spread day bubbles */
   margin-top: 2rem;
 }
 
@@ -150,6 +152,7 @@ html, body {
   font-weight: 500;
   border-radius: 50%;
   display: flex;
+  flex-direction: column;  /* Two lines: day label and date */
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -162,7 +165,7 @@ html, body {
 }
 
 /* ---------------------------------------------------------
-   5) Daily Inspiration Section
+   6) Daily Inspiration Section
 --------------------------------------------------------- */
 .inspiration-section {
   text-align: center;
@@ -183,7 +186,7 @@ html, body {
   max-width: 600px;
 }
 
-/* Updated: Larger inspirational quote for better readability */
+/* Enlarged inspirational quote for better readability */
 #dailyQuote {
   font-size: 1.5rem;
   line-height: 1.4;
@@ -191,19 +194,19 @@ html, body {
 }
 
 /* ---------------------------------------------------------
-   6) Bottom Row of Mood Buttons
+   7) Bottom Row of Mood Buttons
 --------------------------------------------------------- */
 .mood-buttons-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-  margin-bottom: 4rem;
+  flex-wrap: nowrap;  /* Keep all buttons on one line */
+  justify-content: space-around;  /* Evenly spread them */
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
 .mood-button {
-  flex: 1 1 auto;
-  min-width: 120px;
+  flex: 1;
+  max-width: 150px;
   color: #fff;
   padding: 1rem 0.5rem;
   text-align: center;
@@ -212,6 +215,7 @@ html, body {
   font-weight: 500;
   transition: transform 0.3s, box-shadow 0.3s;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 0 5px;
 }
 
 .mood-button:hover {
@@ -240,7 +244,7 @@ html, body {
 }
 
 /* ---------------------------------------------------------
-   7) Journaling Thought Bubble (Pop-Up)
+   8) Journaling Thought Bubble (Pop-Up)
 --------------------------------------------------------- */
 .journal-bubble {
   position: fixed;
@@ -306,7 +310,7 @@ html, body {
 }
 
 /* ---------------------------------------------------------
-   8) Footer (Matches Amie-Skills) – DO NOT CHANGE
+   9) Footer (Matches Amie-Skills) – DO NOT CHANGE
 --------------------------------------------------------- */
 .main-footer {
   background-color: #f8f8f8;
@@ -358,7 +362,7 @@ html, body {
 }
 
 /* ---------------------------------------------------------
-   9) Additional New Styles
+   10) Additional New Styles
 --------------------------------------------------------- */
 /* Style for the Monthly Stats Section */
 #monthlyStatsSection {
@@ -375,7 +379,7 @@ html, body {
 }
 
 /* ---------------------------------------------------------
-   10) Responsive Design – Mobile & Tablet Adjustments
+   11) Responsive Design – Mobile & Tablet Adjustments
 --------------------------------------------------------- */
 
 /* Large screens (desktops & laptops) */
