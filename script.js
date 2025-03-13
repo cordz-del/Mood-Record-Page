@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     journalInspiration.textContent = moodQuotes[mood] || "";
     // Clear previous journal text
     journalText.value = "";
-    // Change page background to a tinted version of the mood color
+    // Change page background to a tinted version of the mood color (only affects elements that use this style)
     document.body.style.backgroundColor = moodColors[mood] || "#fafafa";
     // Show the journal bubble (remove 'hidden' class)
     journalBubble.classList.remove('hidden');
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Mood entry saved!');
         closeJournalBubbleFunc();
 
-        // Optionally, also save to localStorage as a fallback/log (if needed)
+        // Optionally, also save to localStorage as a fallback or log
         let moodLogs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
         moodLogs.push(entry);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(moodLogs));
