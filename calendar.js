@@ -14,32 +14,38 @@ document.addEventListener("DOMContentLoaded", () => {
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const weekDates = [];
 
-  // Build an array with each day's information for the week
+  // Build an array with each day's info for the week
   for (let i = 0; i < 7; i++) {
     const d = new Date(monday);
     d.setDate(monday.getDate() + i);
     const month = d.getMonth() + 1;
     const date = d.getDate();
     weekDates.push({
-      label: daysOfWeek[i],
-      displayDate: `${month}/${date}`,
+      label: daysOfWeek[i],               // e.g. "Mon"
+      displayDate: `${month}/${date}`,    // e.g. "3/10"
       isoDate: d.toISOString().split("T")[0]
     });
   }
 
-  // Select all the day bubble elements from the page
-  const dayBubbles = document.querySelectorAll('.day-bubble');
+  // Select each wrapper that contains the bubble (.day-bubble) and the date (.day-date)
+  const dayBubbleWrappers = document.querySelectorAll(".day-bubble-wrapper");
 
-  // Update each day bubble with the proper day label and date
-  dayBubbles.forEach((bubble, index) => {
+  // Update each day-bubble-wrapper with the proper day label and date
+  dayBubbleWrappers.forEach((wrapper, index) => {
     if (weekDates[index]) {
-      // Set innerHTML with two lines: day label and display date
-      bubble.innerHTML = `
-        <span class="day-label">${weekDates[index].label}</span><br/>
-        <span class="day-date">${weekDates[index].displayDate}</span>
-      `;
-      // Store the ISO date for potential future use
-      bubble.setAttribute('data-iso-date', weekDates[index].isoDate);
+      const bubble = wrapper.querySelector(".day-bubble");
+      const dateElement = wrapper.querySelector(".day-date");
+
+      // Set the bubble text to the day label (e.g., "Mon")
+      bubble.textContent = weekDates[index].label;
+
+      // Set the date below the bubble (e.g., "3/10")
+      if (dateElement) {
+        dateElement.textContent = weekDates[index].displayDate;
+      }
+
+      // Optionally store the ISO date for future use (e.g., data fetch)
+      bubble.setAttribute("data-iso-date", weekDates[index].isoDate);
     }
   });
 });
