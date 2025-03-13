@@ -1,103 +1,92 @@
-document.addEventListener("DOMContentLoaded", () => {
-  // Select all mood buttons on the page
-  const moodButtons = document.querySelectorAll(".mood-button");
+document.addEventListener("DOMContentLoaded", async () => {
+  // Define the moods (must match the mood button data-mood values)
+  const moods = ["stressed", "sad", "angry", "anxiety", "depressed", "lonely"];
 
-  // Function to calculate fallback data for the last 7 days (flat chart with zeros)
-  const getFallbackData = () => {
-    const fallbackDates = [];
-    const fallbackCounts = [];
-    // Create data for the past 7 days (e.g., Mon to Sun or simply last 7 calendar days)
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      // Format the date as M/D
-      const formattedDate = `${d.getMonth() + 1}/${d.getDate()}`;
-      fallbackDates.push(formattedDate);
-      fallbackCounts.push(0);
-    }
-    return { dates: fallbackDates, counts: fallbackCounts };
+  // Create container for the monthly gauge graph
+  const container = document.createElement("div");
+  container.className = "monthly-gauge";
+  
+  // Create a canvas element for the chart
+  const canvas = document.createElement("canvas");
+  canvas.id = "monthlyGaugeChart";
+  container.appendChild(canvas);
+  
+  // Append the container into the designated section (e.g., #monthlyStatsSection)
+  let statsSection = document.getElementById("monthlyStatsSection");
+  if (!statsSection) {
+    statsSection = document.createElement("div");
+    statsSection.id = "monthlyStatsSection";
+    document.querySelector("main.container").appendChild(statsSection);
+  }
+  // Place the monthly gauge at the top of the stats section so it's aligned directly underneath the mood buttons.
+  statsSection.insertBefore(container, statsSection.firstChild);
+  
+  // Define mood-to-color mapping (should be consistent with other parts of your app)
+  const moodColors = {
+    stressed: "#9F58B0",
+    sad: "#003d82",
+    angry: "#FF5A5F",
+    anxiety: "#FFA500",
+    depressed: "#002147",
+    lonely: "#999999"
   };
 
-  // Process each mood button
-  moodButtons.forEach(async (button) => {
-    const mood = button.dataset.mood; // e.g., 'stressed', 'sad', etc.
-    
-    // Create a container div for the chart and a canvas element for Chart.js
-    const chartContainer = document.createElement("div");
-    chartContainer.className = "mood-chart-container";
-    const canvas = document.createElement("canvas");
-    canvas.id = `chart-${mood}`;
-    chartContainer.appendChild(canvas);
-    
-    // Insert the chart container directly after the mood button in the DOM
-    button.parentNode.insertBefore(chartContainer, button.nextSibling);
-    
-    // Prepare fallback data (flat graph)
-    let graphData = getFallbackData();
-
-    // Construct the URL to fetch historical data for the given mood
-    // Replace "https://your-replit-url" with your actual backend URL.
-    const fetchURL = `https://your-replit-url/mood-history?mood=${encodeURIComponent(mood)}`;
-
+  // Function to fetch monthly count for a given mood.
+  // Assumes your backend endpoint supports a parameter "range=month".
+  const fetchMonthlyCount = async (mood) => {
+    const url = `${API_BASE_URL}/mood-history?mood=${encodeURIComponent(mood)}&range=month`;
     try {
-      // Fetch historical data from your backend.
-      // Expected response format:
-      // { dates: ["3/10", "3/11", ...], counts: [2, 3, ...] }
-      const response = await fetch(fetchURL);
+      const response = await fetch(url);
       const data = await response.json();
-
-      // If data exists and has the expected arrays, use it.
-      if (data && Array.isArray(data.dates) && Array.isArray(data.counts)) {
-        graphData = data;
+      // Expected response format:
+      // { dates: ["3/01", "3/02", ...], counts: [2, 3, ...] }
+      if (data && Array.isArray(data.counts)) {
+        // Sum up all counts to get the monthly total.
+        return data.counts.reduce((sum, count) => sum + count, 0);
+      } else {
+        return 0;
       }
     } catch (error) {
-      console.error(`Error fetching mood history for ${mood}:`, error);
-      // If there's an error, the graph will use fallback data (all zeros)
+      console.error(`Error fetching monthly count for ${mood}:`, error);
+      return 0;
     }
+  };
 
-    // Use the computed style of the mood button for the chart color.
-    const moodColor =
-      window.getComputedStyle(button).backgroundColor || "#0056b3";
+  // Fetch monthly counts for all moods concurrently.
+  const monthlyCounts = await Promise.all(moods.map(fetchMonthlyCount));
 
-    // Create a Chart.js bar chart that starts level and updates based on data
-    new Chart(canvas, {
-      type: "bar",
-      data: {
-        labels: graphData.dates,
-        datasets: [
-          {
-            label: `Count for ${mood}`,
-            data: graphData.counts,
-            backgroundColor: moodColor,
-            borderColor: moodColor,
-            borderWidth: 1,
-          },
-        ],
+  // Create a Chart.js bar chart that displays a bar for each mood.
+  new Chart(canvas, {
+    type: "bar",
+    data: {
+      labels: moods.map(m => m.charAt(0).toUpperCase() + m.slice(1)), // Capitalize mood names.
+      datasets: [{
+        label: "Monthly Count",
+        data: monthlyCounts,
+        backgroundColor: moods.map(m => moodColors[m]),
+        borderColor: moods.map(m => moodColors[m]),
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            precision: 0 // Ensure whole numbers on the y-axis.
+          }
+        }
       },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              precision: 0, // ensures whole numbers on the y-axis
-            },
-          },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: (context) => `${context.parsed.y} times`
+          }
         },
-        plugins: {
-          tooltip: {
-            callbacks: {
-              label: function (context) {
-                return ` ${context.parsed.y} times`;
-              },
-            },
-          },
-          legend: {
-            display: false,
-          },
-        },
-        responsive: true,
-        maintainAspectRatio: false,
+        legend: { display: false }
       },
-    });
+      responsive: true,
+      maintainAspectRatio: false
+    }
   });
 });
