@@ -39,13 +39,34 @@
       </div>
       <!-- Row of day bubbles (to be updated dynamically by calendar.js) -->
       <div class="day-bubbles-row">
-        <div class="day-bubble" data-day="Mon"></div>
-        <div class="day-bubble" data-day="Tue"></div>
-        <div class="day-bubble" data-day="Wed"></div>
-        <div class="day-bubble" data-day="Thu"></div>
-        <div class="day-bubble" data-day="Fri"></div>
-        <div class="day-bubble" data-day="Sat"></div>
-        <div class="day-bubble" data-day="Sun"></div>
+        <div class="day-bubble-wrapper">
+          <div class="day-bubble" data-day="Mon"></div>
+          <p class="day-date"></p>
+        </div>
+        <div class="day-bubble-wrapper">
+          <div class="day-bubble" data-day="Tue"></div>
+          <p class="day-date"></p>
+        </div>
+        <div class="day-bubble-wrapper">
+          <div class="day-bubble" data-day="Wed"></div>
+          <p class="day-date"></p>
+        </div>
+        <div class="day-bubble-wrapper">
+          <div class="day-bubble" data-day="Thu"></div>
+          <p class="day-date"></p>
+        </div>
+        <div class="day-bubble-wrapper">
+          <div class="day-bubble" data-day="Fri"></div>
+          <p class="day-date"></p>
+        </div>
+        <div class="day-bubble-wrapper">
+          <div class="day-bubble" data-day="Sat"></div>
+          <p class="day-date"></p>
+        </div>
+        <div class="day-bubble-wrapper">
+          <div class="day-bubble" data-day="Sun"></div>
+          <p class="day-date"></p>
+        </div>
       </div>
     </section>
 
@@ -59,14 +80,44 @@
       </div>
     </section>
 
-    <!-- Bottom Row of Mood Buttons -->
+    <!-- Bottom Row of Mood Buttons with Bullet Graphs -->
     <section class="mood-buttons-row">
-      <div class="mood-button stressed" data-mood="stressed">Stressed</div>
-      <div class="mood-button sad" data-mood="sad">Sad</div>
-      <div class="mood-button angry" data-mood="angry">Angry</div>
-      <div class="mood-button anxiety" data-mood="anxiety">Anxiety</div>
-      <div class="mood-button depressed" data-mood="depressed">Depressed</div>
-      <div class="mood-button lonely" data-mood="lonely">Lonely</div>
+      <div class="mood-button-wrapper">
+        <div class="mood-button stressed" data-mood="stressed">Stressed</div>
+        <div class="bullet-graph" id="bullet-stressed">
+          <div class="bullet-bar" style="width: 20%; background-color: #9F58B0;"></div>
+        </div>
+      </div>
+      <div class="mood-button-wrapper">
+        <div class="mood-button sad" data-mood="sad">Sad</div>
+        <div class="bullet-graph" id="bullet-sad">
+          <div class="bullet-bar" style="width: 20%; background-color: #003d82;"></div>
+        </div>
+      </div>
+      <div class="mood-button-wrapper">
+        <div class="mood-button angry" data-mood="angry">Angry</div>
+        <div class="bullet-graph" id="bullet-angry">
+          <div class="bullet-bar" style="width: 20%; background-color: #FF5A5F;"></div>
+        </div>
+      </div>
+      <div class="mood-button-wrapper">
+        <div class="mood-button anxiety" data-mood="anxiety">Anxiety</div>
+        <div class="bullet-graph" id="bullet-anxiety">
+          <div class="bullet-bar" style="width: 20%; background-color: #FFA500;"></div>
+        </div>
+      </div>
+      <div class="mood-button-wrapper">
+        <div class="mood-button depressed" data-mood="depressed">Depressed</div>
+        <div class="bullet-graph" id="bullet-depressed">
+          <div class="bullet-bar" style="width: 20%; background-color: #002147;"></div>
+        </div>
+      </div>
+      <div class="mood-button-wrapper">
+        <div class="mood-button lonely" data-mood="lonely">Lonely</div>
+        <div class="bullet-graph" id="bullet-lonely">
+          <div class="bullet-bar" style="width: 20%; background-color: #999999;"></div>
+        </div>
+      </div>
     </section>
 
     <!-- Pop-out Journaling Thought Bubble (Hidden by default) -->
@@ -78,10 +129,10 @@
       <button id="saveJournal" class="submit-btn">Save Journal</button>
     </div>
 
-    <!-- Monthly Stats Section (new section for mood stats graph) -->
+    <!-- Monthly Stats Section (for Nightingale chart) -->
     <section id="monthlyStatsSection">
       <h2>Monthly Mood Stats</h2>
-      <!-- monthlyStatsGraph.js will insert the graph here -->
+      <!-- monthlyStatsGraph.js will insert the Nightingale chart here -->
     </section>
   </main>
 
