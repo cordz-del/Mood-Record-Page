@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Define the moods (must match the mood button data-mood values)
   const moods = ["stressed", "sad", "angry", "anxiety", "depressed", "lonely"];
 
-  // Create container for the monthly gauge graph
+  // Create container for the monthly gauge (bullet graph) chart
   const container = document.createElement("div");
   container.className = "monthly-gauge";
   
@@ -11,17 +11,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   canvas.id = "monthlyGaugeChart";
   container.appendChild(canvas);
   
-  // Append the container into the designated section (e.g., #monthlyStatsSection)
+  // Append the container into the designated section (#monthlyStatsSection)
   let statsSection = document.getElementById("monthlyStatsSection");
   if (!statsSection) {
     statsSection = document.createElement("div");
     statsSection.id = "monthlyStatsSection";
     document.querySelector("main.container").appendChild(statsSection);
   }
-  // Place the monthly gauge at the top of the stats section so it's aligned directly underneath the mood buttons.
+  // Place the monthly gauge at the top of the stats section
   statsSection.insertBefore(container, statsSection.firstChild);
   
-  // Define mood-to-color mapping (should be consistent with other parts of your app)
+  // Define mood-to-color mapping (consistent with your app)
   const moodColors = {
     stressed: "#9F58B0",
     sad: "#003d82",
@@ -38,8 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       const response = await fetch(url);
       const data = await response.json();
-      // Expected response format:
-      // { dates: ["3/01", "3/02", ...], counts: [2, 3, ...] }
+      // Expected response format: { dates: ["3/01", "3/02", ...], counts: [2, 3, ...] }
       if (data && Array.isArray(data.counts)) {
         // Sum up all counts to get the monthly total.
         return data.counts.reduce((sum, count) => sum + count, 0);
@@ -55,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Fetch monthly counts for all moods concurrently.
   const monthlyCounts = await Promise.all(moods.map(fetchMonthlyCount));
 
-  // Create a Chart.js bar chart that displays a bar for each mood.
+  // Create a horizontal bar chart (bullet graph style) with Chart.js.
   new Chart(canvas, {
     type: "bar",
     data: {
@@ -69,18 +68,22 @@ document.addEventListener("DOMContentLoaded", async () => {
       }]
     },
     options: {
+      indexAxis: 'y', // Horizontal bars for bullet graph look.
       scales: {
-        y: {
+        x: {
           beginAtZero: true,
-          ticks: {
-            precision: 0 // Ensure whole numbers on the y-axis.
-          }
+          // Set a maximum value for the bullet graph gauge; adjust as needed.
+          max: 20,
+          ticks: { precision: 0 }
+        },
+        y: {
+          beginAtZero: true
         }
       },
       plugins: {
         tooltip: {
           callbacks: {
-            label: (context) => `${context.parsed.y} times`
+            label: (context) => `${context.parsed.x} times`
           }
         },
         legend: { display: false }
