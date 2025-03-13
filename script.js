@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     journalInspiration.textContent = moodQuotes[mood] || "";
     // Clear previous journal text
     journalText.value = "";
-    // Change page background to a tinted version of the mood color (only affects elements that use this style)
+    // Change page background to a tinted version of the mood color (only affects the journal context)
     document.body.style.backgroundColor = moodColors[mood] || "#fafafa";
     // Show the journal bubble (remove 'hidden' class)
     journalBubble.classList.remove('hidden');
@@ -145,4 +145,35 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // -------------------------------
+  // New: Retrieve Monthly Mood Entries for Charting
+  // -------------------------------
+  async function fetchMonthlyMoods() {
+    // Assume a user is signed in; the current username is stored in localStorage under 'currentUser'
+    const currentUser = localStorage.getItem('currentUser');
+    if (!currentUser) return; // No signed-in user found
+
+    try {
+      // Fetch monthly mood entries for the signed-in user.
+      // This endpoint should return all mood entries for the current month.
+      const response = await fetch(`${API_BASE_URL}/mood-entries?username=${encodeURIComponent(currentUser)}&range=month`);
+      if (response.ok) {
+        const monthlyData = await response.json();
+        // Store the monthly mood data in localStorage for use by other modules (e.g., for chart updates)
+        localStorage.setItem("monthlyMoodData", JSON.stringify(monthlyData));
+        // Optionally, if there's a global update function for charts, call it here:
+        if (window.updateMonthlyCharts) {
+          window.updateMonthlyCharts(monthlyData);
+        }
+      } else {
+        console.error("Failed to fetch monthly moods:", response.status);
+      }
+    } catch (error) {
+      console.error("Error fetching monthly moods:", error);
+    }
+  }
+
+  // Retrieve monthly moods after setting up event listeners
+  fetchMonthlyMoods();
 });
