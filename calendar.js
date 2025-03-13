@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Get today's date
   const today = new Date();
 
-  // Calculate the offset to get Monday (JavaScript: Sunday=0, Monday=1, etc.)
+  // Calculate offset to get Monday (JavaScript: Sunday=0, Monday=1, etc.)
   const dayOfWeek = today.getDay(); // 0 (Sun) to 6 (Sat)
   const mondayOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
 
@@ -33,12 +33,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // Update each day bubble with the proper day label and date
   dayBubbles.forEach((bubble, index) => {
     if (weekDates[index]) {
-      // Replace the inner HTML with day label and date in two lines
+      // Set innerHTML with two lines: day label and display date
       bubble.innerHTML = `
         <span class="day-label">${weekDates[index].label}</span><br/>
         <span class="day-date">${weekDates[index].displayDate}</span>
       `;
-      // Optionally store the ISO date for later use (e.g., fetching mood data)
+      // Store the ISO date for potential future use
       bubble.setAttribute('data-iso-date', weekDates[index].isoDate);
     }
   });
