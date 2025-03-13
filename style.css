@@ -59,6 +59,27 @@ html, body {
   margin-top: -5px;
 }
 
+/* New: Log Out Button Styles */
+.logout-container {
+  display: flex;
+  align-items: center;
+}
+
+.btn.logout {
+  padding: 0.5rem 1rem;
+  background-color: #0056b3;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn.logout:hover {
+  background-color: #003d82;
+}
+
 /* ---------------------------------------------------------
    3) Main Container
 --------------------------------------------------------- */
@@ -100,6 +121,7 @@ html, body {
   justify-content: center;
 }
 
+/* Retained in case of fallback content */
 .mood-tracker-center {
   position: absolute;
   text-align: center;
@@ -161,8 +183,9 @@ html, body {
   max-width: 600px;
 }
 
+/* Updated: Larger inspirational quote for better readability */
 #dailyQuote {
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   line-height: 1.4;
   color: #444;
 }
@@ -335,7 +358,24 @@ html, body {
 }
 
 /* ---------------------------------------------------------
-   9) Responsive Design – Mobile & Tablet Adjustments
+   9) Additional New Styles
+--------------------------------------------------------- */
+/* Style for the Monthly Stats Section */
+#monthlyStatsSection {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+/* Optional: Style for chart containers used in moodGraphs.js */
+.mood-chart-container {
+  width: 100%;
+  max-width: 250px;
+  height: 150px;
+  margin: 0.5rem auto;
+}
+
+/* ---------------------------------------------------------
+   10) Responsive Design – Mobile & Tablet Adjustments
 --------------------------------------------------------- */
 
 /* Large screens (desktops & laptops) */
