@@ -12,14 +12,28 @@ document.addEventListener("DOMContentLoaded", () => {
   const totalSegments = 14;
   const defaultColor = "#ccc"; // default gray for no mood input
 
-  // Initial segment colors: all segments start with the default color.
-  const segmentColors = new Array(totalSegments).fill(defaultColor);
+  // Mood-to-color mapping (for when real data is available)
+  const moodColors = {
+    stressed: "#9F58B0",
+    sad: "#003d82",
+    angry: "#FF5A5F",
+    anxiety: "#FFA500",
+    depressed: "#002147",
+    lonely: "#999999"
+  };
+
+  // Create a placeholder array with random colors from the moodColors mapping
+  const moodKeys = Object.keys(moodColors);
+  const segmentColors = Array.from({ length: totalSegments }, () => {
+    const randomMood = moodKeys[Math.floor(Math.random() * moodKeys.length)];
+    return moodColors[randomMood];
+  });
 
   // Set up the Chart.js donut chart data.
   const chartData = {
     labels: Array.from({ length: totalSegments }, (_, i) => `Entry ${i + 1}`),
     datasets: [{
-      data: new Array(totalSegments).fill(1), // each segment has equal weight
+      data: new Array(totalSegments).fill(1), // Each segment has equal weight.
       backgroundColor: segmentColors,
       borderWidth: 0
     }]
@@ -30,15 +44,14 @@ document.addEventListener("DOMContentLoaded", () => {
     type: "doughnut",
     data: chartData,
     options: {
-      cutout: "70%", // Inner radius adjustment for visual style
+      cutout: "70%", // Adjust the inner radius for visual style.
       plugins: {
         legend: { display: false },
         tooltip: {
           callbacks: {
-            label: function (context) {
-              // Display the current segment color in the tooltip.
-              const moodColor = context.dataset.backgroundColor[context.dataIndex];
-              return `Color: ${moodColor}`;
+            label: function(context) {
+              const color = context.dataset.backgroundColor[context.dataIndex];
+              return `Color: ${color}`;
             }
           }
         }
@@ -48,18 +61,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // Initialize the Chart.js chart.
+  // Initialize the Chart.js donut chart.
   const moodChart = new Chart(canvas, chartOptions);
-
-  // Mood-to-color mapping (update colors as needed)
-  const moodColors = {
-    stressed: "#9F58B0",
-    sad: "#003d82",
-    angry: "#FF5A5F",
-    anxiety: "#FFA500",
-    depressed: "#002147",
-    lonely: "#999999"
-  };
 
   // Expose a function to update a specific segment when a mood is recorded.
   // segmentIndex should be between 0 and 13 (14 segments total).
@@ -77,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Pass an array (up to 14 items) of mood names.
   window.updateMoodCircle = function(moodArray) {
     const newColors = moodArray.map(m => moodColors[m] || defaultColor);
-    // Ensure the array always has exactly 14 segments.
+    // Ensure we always have exactly 14 segments.
     while (newColors.length < totalSegments) {
       newColors.push(defaultColor);
     }
@@ -85,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
     moodChart.update();
   };
 
-  // For demonstration purposes, you can simulate mood updates:
+  // For demonstration purposes, you can simulate mood updates by uncommenting the following:
   /*
   let demoIndex = 0;
   const demoMoods = ["stressed", "sad", "angry", "anxiety", "depressed", "lonely"];
