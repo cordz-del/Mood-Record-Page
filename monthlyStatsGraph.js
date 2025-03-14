@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
   Chart.register(shadowPlugin);
 
-  // Create container for the monthly stats graph
+  // Create container for the monthly stats chart
   const container = document.createElement("div");
   container.className = "monthly-stats-container";
   
@@ -34,10 +34,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
   statsSection.appendChild(container);
   
-  // Fallback data in case fetching fails
-  let mostTracked = { mood: "none", count: 0 };
-  let leastTracked = { mood: "none", count: 0 };
-  
   // Define mood-to-color mapping (consistent with your app)
   const moodColors = {
     stressed: "#9F58B0",
@@ -47,50 +43,76 @@ document.addEventListener("DOMContentLoaded", async () => {
     depressed: "#002147",
     lonely: "#999999"
   };
-  
+
+  // Define the moods to display
+  const moods = ["stressed", "sad", "angry", "anxiety", "depressed", "lonely"];
+
+  // Attempt to fetch monthly stats from your backend.
+  let fetchedData;
   try {
-    // Use the defined API_BASE_URL to fetch monthly stats
     const response = await fetch(`${API_BASE_URL}/mood-stats`);
-    const data = await response.json();
-    // Expected data format:
-    // { mostTracked: { mood: "stressed", count: 15 }, leastTracked: { mood: "lonely", count: 3 } }
-    if (data) {
-      mostTracked = data.mostTracked || mostTracked;
-      leastTracked = data.leastTracked || leastTracked;
+    if (response.ok) {
+      fetchedData = await response.json();
     }
   } catch (error) {
     console.error("Error fetching monthly stats:", error);
   }
   
-  // Create the Chart.js bar chart with two bars
+  // Process fetched data: assume fetchedData.moods is an object like
+  // { stressed: count, sad: count, ... }
+  let placeholder = false;
+  let moodData = [];
+  if (fetchedData && fetchedData.moods) {
+    moodData = moods.map(m => ({
+      mood: m,
+      count: fetchedData.moods[m] || 0
+    }));
+    // If all counts are zero, we'll use placeholder data.
+    if (moodData.every(d => d.count === 0)) {
+      placeholder = true;
+    }
+  } else {
+    placeholder = true;
+  }
+
+  // Generate placeholder data if needed
+  if (placeholder) {
+    moodData = moods.map(m => ({
+      mood: m,
+      count: Math.floor(Math.random() * 10) + 1  // random count between 1 and 10
+    }));
+  }
+
+  // Prepare data arrays for the polarArea chart (Nightingale chart style)
+  const labels = moodData.map(d => d.mood.charAt(0).toUpperCase() + d.mood.slice(1));
+  const counts = moodData.map(d => d.count);
+  const bgColors = moodData.map(d => moodColors[d.mood] || "#ccc");
+
+  // Create the Chart.js polarArea chart (Nightingale style)
   new Chart(canvas, {
-    type: "bar",
+    type: "polarArea",
     data: {
-      labels: ["Most Tracked Mood", "Least Tracked Mood"],
+      labels: labels,
       datasets: [{
-        label: "Mood Count",
-        data: [mostTracked.count, leastTracked.count],
-        backgroundColor: [
-          moodColors[mostTracked.mood] || "#0056b3",
-          moodColors[leastTracked.mood] || "#0056b3"
-        ],
-        borderWidth: 1
+        data: counts,
+        backgroundColor: bgColors
       }]
     },
     options: {
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: { precision: 0 }
-        }
-      },
       plugins: {
+        legend: { display: true },
         tooltip: {
           callbacks: {
-            label: (context) => `${context.parsed.y} times`
+            label: function(context) {
+              return `${context.label}: ${context.parsed} times`;
+            }
           }
-        },
-        legend: { display: false }
+        }
+      },
+      scales: {
+        r: {
+          beginAtZero: true
+        }
       },
       responsive: true,
       maintainAspectRatio: false
