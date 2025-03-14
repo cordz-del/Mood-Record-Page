@@ -52,7 +52,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
 
   // Fetch monthly counts for all moods concurrently.
-  const monthlyCounts = await Promise.all(moods.map(fetchMonthlyCount));
+  let monthlyCounts = await Promise.all(moods.map(fetchMonthlyCount));
+
+  // If all counts are zero (i.e. no real data yet), generate placeholder random counts.
+  if (monthlyCounts.every(count => count === 0)) {
+    monthlyCounts = moods.map(() => Math.floor(Math.random() * 10) + 1);
+  }
 
   // Create a horizontal bar chart (bullet graph style) with Chart.js.
   new Chart(canvas, {
