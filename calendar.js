@@ -21,8 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const month = d.getMonth() + 1;
     const date = d.getDate();
     weekDates.push({
-      label: daysOfWeek[i],               // e.g. "Mon"
-      displayDate: `${month}/${date}`,    // e.g. "3/10"
+      label: daysOfWeek[i],             // e.g., "Mon"
+      displayDate: `${month}/${date}`,  // e.g., "3/10"
       isoDate: d.toISOString().split("T")[0]
     });
   }
