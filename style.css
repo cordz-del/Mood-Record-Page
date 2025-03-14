@@ -170,7 +170,7 @@ html, body {
   background-color: #003d82;
 }
 
-/* Day date styling: displayed below bubble in black */
+/* Day date styling: displayed below the bubble in black */
 .day-date {
   margin-top: 0.3rem;
   font-size: 0.8rem;
@@ -209,7 +209,7 @@ html, body {
 /* ---------------------------------------------------------
    7) Bottom Row of Mood Buttons & Bullet Graphs
 --------------------------------------------------------- */
-/* Group mood button and its bullet graph */
+/* Group each mood button and its bullet graph together */
 .mood-button-wrapper {
   display: flex;
   flex-direction: column;
