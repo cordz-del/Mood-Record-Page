@@ -15,7 +15,7 @@
   </script>
 </head>
 <body>
-  <!-- Header (updated to include Log Out button) -->
+  <!-- Header (with Log Out button) -->
   <header class="main-header">
     <nav class="nav-container">
       <div class="logo">
@@ -33,11 +33,11 @@
     <!-- One-Week Mood Tracker Section -->
     <section class="mood-tracker-section">
       <h2 class="section-title">One-Week Mood Tracker</h2>
-      <!-- Mood Tracker Wheel (dynamic 14-segment mood circle via Chart.js) -->
+      <!-- Mood Tracker Wheel (dynamic 14-segment donut chart via Chart.js) -->
       <div class="mood-tracker-wheel">
         <canvas id="moodCircleChart"></canvas>
       </div>
-      <!-- Row of day bubbles (to be updated dynamically by calendar.js) -->
+      <!-- Row of day bubbles (updated by calendar.js) -->
       <div class="day-bubbles-row">
         <div class="day-bubble-wrapper">
           <div class="day-bubble" data-day="Mon"></div>
@@ -70,7 +70,7 @@
       </div>
     </section>
 
-    <!-- Daily Inspiration Section (with larger text via updated CSS) -->
+    <!-- Daily Inspiration Section -->
     <section class="inspiration-section">
       <h3>Daily Inspiration</h3>
       <div class="inspiration-card">
@@ -120,7 +120,7 @@
       </div>
     </section>
 
-    <!-- Pop-out Journaling Thought Bubble (Hidden by default) -->
+    <!-- Journaling Thought Bubble (hidden by default) -->
     <div id="journalBubble" class="journal-bubble hidden">
       <span class="close" id="closeJournalBubble">&times;</span>
       <h2 id="journalMoodTitle">Mood: [Mood]</h2>
@@ -129,10 +129,10 @@
       <button id="saveJournal" class="submit-btn">Save Journal</button>
     </div>
 
-    <!-- Monthly Stats Section (for Nightingale chart) -->
+    <!-- Monthly Stats Section (for Nightingale / bar chart) -->
     <section id="monthlyStatsSection">
       <h2>Monthly Mood Stats</h2>
-      <!-- monthlyStatsGraph.js will insert the Nightingale chart here -->
+      <!-- monthlyStatsGraph.js will insert the chart here -->
     </section>
   </main>
 
